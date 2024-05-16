@@ -1,0 +1,79 @@
+.service-popup-box {
+    position: relative;
+    background-color: #282828;
+    color: #ffffff;
+    width: 300px;
+    padding: 15px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    z-index: 101;
+}
+
+.service-popup-box .popup-btn {
+    position: absolute;
+    cursor: pointer;
+    color: #fff;
+    padding: 2px;
+    background: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.service-popup-box .popup-btn.reset-btn {
+    top: 5px;
+    right: 30px;
+}
+.service-popup-box .popup-btn.close-btn {
+    top: 5px;
+    right: 5px;
+}
+
+.service-popup-box table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.service-popup-box th {
+    text-align: left;
+}
+
+.service-popup-box label {
+    display: flex;
+    align-items: center;
+}
+
+.service-popup-box input[type="text"] {
+    width: 75px;
+    padding: 4px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #282828;
+    color: #fff;
+    box-sizing: border-box;
+}
+
+.service-popup-box input[type="checkbox"] {
+    margin-right: 5px;
+    background-color: #fff;
+}
+
+.service-popup-box td {
+    padding: 4px;
+    text-align: center;
+    width: 100px;
+}
+
+.service-popup-box .small-font {
+    font-size: 0.8rem;
+    color: #ccc; /* Lighter text color for small fonts */
+    text-align: center;
+}
+
+.service-popup-box input:disabled {
+    background-color: #333333;
+    /*color: #495057;*/
+}

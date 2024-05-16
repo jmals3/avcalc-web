@@ -1,0 +1,225 @@
+.sidebar {
+  width: 250px;
+  flex-shrink: 0;
+  background-color: #333;
+  color: white;
+  justify-content: space-between;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar.collapsed {
+  width: 80px;
+}
+
+.sidebar-toggle {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  width: 50px;
+}
+
+.nav-bottom {
+  margin-top: auto;
+  margin-bottom: 10px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 10px 0;
+}
+
+.logo {
+  padding: 10px 20px;
+  font-size: 24px;
+}
+  .logo .dark {
+    height: 36px;
+    width: 36px;
+    filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(1%) hue-rotate(327deg) brightness(111%) contrast(101%);
+  }
+
+.nav {
+  display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-section {
+  font-size: 0.8em;
+  padding-left: 10px;
+  position: relative;
+  cursor: pointer;
+}
+
+.nav-section::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  right: 2%;
+  height: 0.5px;
+  background: #fff;
+}
+
+.nav-section span {
+  background: #333;
+  padding-right: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.nav-item {
+  padding: 10px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.nav-item:hover {
+  background-color: #555;
+}
+
+.nav-item-content {
+  position: relative;
+  white-space: nowrap;
+}
+
+.icon {
+  margin-right: 10px;
+}
+
+table.sessions {
+}
+
+.session {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 10px 10px 20px;
+}
+
+.session:hover {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.session.selected-session {
+  background-color: #555;
+}
+
+.session-star {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.session-name {
+  /*min-width: 150px;*/
+  width: 100%;
+  padding: 0 10px;
+  text-align: left;
+}
+
+.session-ellipsis {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.hidden {
+  display: none;
+}
+
+.session:hover .session-ellipsis {
+  display: flex;
+}
+
+.new-model-button {
+  width: 123px;
+  padding: 10px;
+  margin: 30px 20px 8px 20px;
+  background-color: #555;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.new-model-button:hover {
+  background-color: #777;
+}
+
+.new-model-button-text {
+  display: flex;
+  justify-content: space-between;
+}
+
+.menu {
+  position: fixed;
+  background-color: #444;
+  width: 100px;
+  font-weight: normal;
+  color: white;
+  z-index: 1;
+}
+
+.menu ul {
+  list-style: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.menu li {
+  padding: 5px 10px;
+  font-size: smaller;
+  cursor: pointer;
+}
+
+.menu li:hover {
+  background-color: #555;
+}
+
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  cursor: auto;
+}
+
+.session-rename {
+  font-size: medium;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2;
+}
+
+.rename-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  cursor: auto;
+}

@@ -1,0 +1,220 @@
+.av-table {
+    border-spacing: 0;
+    border-collapse: separate;
+    border-bottom: 2px solid #111;
+    border-left: 2px solid #111;
+}
+
+.av-table td {
+    position: relative;
+    background-color: #333;
+    border-top: 1px solid #222;
+    border-right: 1px solid #222;
+    /*border-radius: 4px;*/
+    height: 24px;
+    padding: 8px;
+    cursor: default;
+}
+
+.av-table td.editable {
+    cursor: pointer;
+    background-color: #282828;
+    transition: box-shadow 0.25s;
+}
+
+.av-table td.editable:hover {
+    z-index: 1;
+    box-shadow: 0 0 0 1px #646cff;
+}
+.av-table td.editable:focus,
+.av-table td.editable:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+}
+
+.av-table td.editable:focus,
+.av-table td.editable:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+}
+
+.av-table td.inactive {
+    background-color: #333;
+}
+
+.av-table td.plan-data {
+    min-width: 130px;
+    text-align: center;
+    font-size: small;
+}
+
+.av-table td input, .av-table td select{
+    width: 100%;
+    background-color: inherit;
+    border: none;
+    text-align: center;
+    text-align-last: center;
+    font-size: inherit;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    border-radius: 0;
+    padding: 1px;
+}
+
+.av-table .service-input:focus {
+    outline-offset: -2px;
+}
+.av-table .service-input:focus-visible {
+    outline-color: -webkit-focus-ring-color;
+    outline-style: auto;
+    outline-width: 5px;
+}
+
+.av-table .ded-coins {
+    color: #CCC;
+}
+
+/* unfortunately writing-mode doesn't work on safari
+   so had to improvise with some clunkier css
+   hence the commented-out code below */
+.av-table .group-label {
+    /*writing-mode: vertical-lr;*/
+    font-weight: bold;
+    text-align: center;
+    /*width: 24px;*/
+    max-width: 24px;
+    overflow: hidden;
+    border-top: 2px solid #111;
+    border-right: 1px solid #111;
+}
+.av-table .group-label > span {
+    /*transform: rotate(180deg);*/
+    display: inline-block;
+    white-space: nowrap;
+    overflow: visible;
+    transform: rotate(270deg);
+    transform-origin: center;
+    width: 40px;
+    height: 40px;
+}
+.av-table .group-top-row {
+    border-top: 2px solid #111;
+}
+
+
+.av-table .section-label {
+    font-weight: bold;
+    width: 100px;
+    text-align: center;
+    border-top: 1px solid #111;
+    border-right: 1px solid #111;
+}
+.av-table .section-label.group-top-row {
+    border-top: 2px solid #111;
+}
+.av-table td.section-top-row {
+    border-top: 1px solid #111;
+}
+
+.av-table .field-label {
+    font-size: small;
+    background-color: #333;
+    border-right: 1px solid #111;
+    min-width: 200px;
+}
+
+.av-table .last-tier {
+    border-right: 1px solid #111;
+}
+
+.av-table .plan-name-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.av-table .icon-size {
+    font-size: 0.8em;
+    padding: 0 4px;
+}
+
+.av-table .plan-color-picker {
+    /*padding: 2px;*/
+    margin-left: 2px;
+    width: 24px;
+    height: 28px;
+    border: none;
+}
+
+.calcbtn {
+    background-color: #555;
+    text-align: center;
+    color: white;
+    border: 1px solid white;
+    width: 90%;
+    height: 40%;
+    cursor: pointer;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.av-table .sticky-1 {
+    position: sticky;
+    top: 0;
+    z-index: 4;
+}
+.av-table .sticky-2 {
+    position: sticky;
+    top: 42px;
+    z-index: 4;
+}
+.av-table .sticky-3 {
+    position: sticky;
+    top: 83px;
+    z-index: 4;
+}
+.av-table .sticky-4 {
+    position: sticky;
+    top: 124px;
+    z-index: 4;
+}
+.av-table .sticky-5 {
+    position: sticky;
+    top: 166px;
+    z-index: 4;
+}
+.av-table .sticky-6 {
+    position: sticky;
+    top: 207px;
+    z-index: 4;
+}
+
+.av-table .group-label,
+.av-table .section-label,
+.av-table .field-label {
+    position: sticky;
+    left: 0;
+    z-index: 5;
+}
+
+.av-table .group-label.sticky-1,
+.av-table .section-label.sticky-1,
+.av-table .field-label.sticky-1,
+.av-table .group-label.sticky-2,
+.av-table .section-label.sticky-2,
+.av-table .field-label.sticky-2,
+.av-table .group-label.sticky-3,
+.av-table .section-label.sticky-3,
+.av-table .field-label.sticky-3,
+.av-table .group-label.sticky-4,
+.av-table .section-label.sticky-4,
+.av-table .field-label.sticky-4,
+.av-table .group-label.sticky-5,
+.av-table .section-label.sticky-5,
+.av-table .field-label.sticky-5,
+.av-table .group-label.sticky-6,
+.av-table .section-label.sticky-6,
+.av-table .field-label.sticky-6 {
+    z-index: 6;
+}

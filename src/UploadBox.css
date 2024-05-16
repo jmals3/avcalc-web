@@ -1,0 +1,36 @@
+/* UploadBox.css */
+
+.UploadBox {
+    width: 300px;
+    height: 200px;
+    border: 2px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.UploadBox input[type="file"] {
+    display: none;
+}
+
+.UploadBox label {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+
+.UploadBox button {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #008CBA;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+.UploadBox button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
