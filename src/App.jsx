@@ -24,7 +24,7 @@ function App() {
             <div className="main">
                 <Header />
                 <div className="content">
-                    {/*<AVModel />*/}
+                    <AVModel />
                 </div>
             </div>
         </div>

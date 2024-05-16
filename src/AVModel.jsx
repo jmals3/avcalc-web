@@ -4,7 +4,7 @@ import _plandata from "./plandata.js";
 import _defaultPlan from "./defaultPlan.js";
 import {hyphenStrs} from "./functions.js";
 import ServiceCostSharingPopup from "./ServiceCostSharingPopUp.jsx";
-import {FaPlus, FaTrash} from "react-icons/fa";
+import {FaCaretLeft, FaTrash, FaCaretRight} from "react-icons/fa";
 import './AVModel.css';
 
 function useDynamicRefs(rows, cols) {
@@ -258,6 +258,26 @@ const AVModel = () => {
         let newPlanData = {...planData};
         newPlanData.plans.splice(planNum, 1);
         setPlanData(newPlanData);
+    }
+
+    function movePlanLeft(planNum) {
+        let newPlanData = {...planData};
+        if (planNum > 0) {
+            let temp = newPlanData.plans[planNum];
+            newPlanData.plans[planNum] = newPlanData.plans[planNum - 1];
+            newPlanData.plans[planNum - 1] = temp;
+            setPlanData(newPlanData);
+        }
+    }
+
+    function movePlanRight(planNum) {
+        let newPlanData = {...planData};
+        if (planNum < newPlanData.plans.length - 1) {
+            let temp = newPlanData.plans[planNum];
+            newPlanData.plans[planNum] = newPlanData.plans[planNum + 1];
+            newPlanData.plans[planNum + 1] = temp;
+            setPlanData(newPlanData);
+        }
     }
 
     function checkPlanDataBeforeCalc() {
@@ -624,9 +644,14 @@ const AVModel = () => {
                 {inactive ? '' :
                     isInfoGroupPlan ? (
                         <div className="plan-name-container">
-                            {planData.plans.length > 1 ?
-                                <FaTrash style={{marginRight:'25px'}} className={'icon-size'} onClick={() => removePlan(planNum)}/>
-                                : <div style={{width: '33px'}}></div>}
+                            <div style={{display: 'flex', alignItems: 'center'}}>
+                                {planNum > 0 ?
+                                    <FaCaretLeft className={'icon-size'} onClick={() => movePlanLeft(planNum)}/>
+                                    : <div style={{width: '21px'}}></div>}
+                                {planData.plans.length > 1 ?
+                                    <FaTrash className={'icon-size'} onClick={() => removePlan(planNum)}/>
+                                    : <div style={{width: '33px'}}></div>}
+                            </div>
                             {getDataCellInput(val, field, planNum)}
                             <div style={{display: 'flex', alignItems: 'center'}}>
                                 {/*<input type="color" onChange={(e) => changePlanColor(e, planNum)}/>*/}
@@ -634,7 +659,10 @@ const AVModel = () => {
                                        className={'plan-color-picker'}
                                        onChange={(e) => changePlanColor(e, planNum)}
                                        value={plan.color} />
-                                <FaPlus className={'icon-size'} onClick={() => addPlan(planNum)}/>
+                                {/*<FaPlus className={'icon-size'} onClick={() => addPlan(planNum)}/>*/}
+                                {planNum < planData.plans.length - 1 ?
+                                    <FaCaretRight className={'icon-size'} onClick={() => movePlanRight(planNum)}/>
+                                    : <div style={{width: '21px'}}></div>}
                             </div>
                         </div>
                     ) : getDataCellInput(val, field, planNum)
