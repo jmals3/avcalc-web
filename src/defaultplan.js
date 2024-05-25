@@ -1,7 +1,7 @@
 const defaultPlan = {
     "name": "New Plan",
-    "carrier": "Aetna",
     "scenario": "Status Quo",
+    "color": "#555",
     "plan_type": "PPO",
     "tiers": [
         {

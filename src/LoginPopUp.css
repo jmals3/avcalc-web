@@ -1,0 +1,153 @@
+/*body {*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    height: 100vh;*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*}*/
+
+/*.login-container {*/
+/*    display: flex;*/
+/*    height: 100%;*/
+/*    padding: 40px;*/
+/*}*/
+.login-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+.login-box {
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    background-color: #242424;
+    text-align: center;
+}
+
+.login-box h2 {
+    margin-bottom: 10px;
+}
+
+.login-box p {
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.login-box input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.password-container {
+    position: relative;
+}
+
+.show-password-btn {
+    font-size: small;
+    position: absolute;
+    right: 4px;
+    top: 40%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #555;
+    cursor: pointer;
+}
+
+.forgot-password-link {
+    display: block;
+    margin-bottom: 20px;
+    color: #555;
+    text-decoration: none;
+}
+
+.login-std-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #555;
+    border: none;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.divider {
+    margin: 20px 0;
+    color: #999;
+}
+
+.login-apple-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #000;
+    border: none;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.oauth-login-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.login-google-btn {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+    background-color: #000;
+    border: none;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.login-microsoft-btn {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+    background-color: #222;
+    border: none;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.signup-link {
+    margin-top: 20px;
+    color: #555;
+}
+
+.signup-link a {
+    color: #0073b1;
+    text-decoration: none;
+}
+
+.login-box.login-btn {
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.login-box .login-btn:hover {
+    background-color: #5f5f5f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.login-box .login-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}

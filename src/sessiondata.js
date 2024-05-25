@@ -1,16 +1,16 @@
 const sessiondata = [
     {
-        id: 1,
+        guid: '1',
         name: 'Session 1',
         starred: false,
     },
     {
-        id: 2,
+        guid: '2',
         name: 'Session 2',
         starred: true,
     },
     {
-        id: 3,
+        guid: '3',
         name: 'Session 3',
         starred: false,
     }

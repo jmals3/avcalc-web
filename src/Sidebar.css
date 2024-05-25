@@ -5,7 +5,7 @@
   flex-shrink: 0;
   background-color: #333;
   color: white;
-  justify-content: flex-start;
+  justify-content: space-between;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -34,10 +34,14 @@
     filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(1%) hue-rotate(327deg) brightness(111%) contrast(101%);
   }
 
+.sidebar-top {
+  display: flex;
+  flex-direction: column;
+}
+
 .nav {
   display: flex;
   flex-direction: column;
-  height: 100%;
 }
 
 .nav-bottom {
@@ -85,7 +89,8 @@ hr {
 }
 
 .nav-item {
-  padding: 10px 20px;
+  margin: 5px 0;
+  padding: 5px 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -104,7 +109,14 @@ hr {
   margin-right: 10px;
 }
 
-table.sessions {
+.sessions {
+  overflow-y: auto;
+  margin-top: 20px;
+}
+
+.sessions table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
 .session {
@@ -162,9 +174,20 @@ table.sessions {
   cursor: pointer;
 }
 
+/*.new-model-button:hover {*/
+/*  background-color: #777;*/
+/*}*/
+
 .new-model-button:hover {
-  background-color: #777;
+  background-color: #5f5f5f;
+  /*transform: translateY(-2px);*/
+  /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);*/
 }
+
+/*.new-model-button:active {*/
+/*  transform: translateY(1px);*/
+/*  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);*/
+/*}*/
 
 .new-model-button-text {
   display: flex;
@@ -227,4 +250,24 @@ table.sessions {
   align-items: center;
   z-index: 1;
   cursor: auto;
+}
+
+/* Scrollbar Styling */
+.sessions::-webkit-scrollbar {
+  width: 0px;  /* Remove scrollbar space */
+  background: transparent;  /* Optional: just make scrollbar invisible */
+}
+
+/* When hovering over the div */
+.sessions:hover::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.sessions:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255,255,255,0.5); /* Color of the scroll thumb */
+  border-radius: 20px; /* Radius for the scroll thumb */
+}
+
+.sessions:hover::-webkit-scrollbar-track {
+  background: transparent; /* Color of the scroll track */
 }

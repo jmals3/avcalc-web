@@ -15,13 +15,71 @@
   overflow-x: hidden;
   height: calc(100vh - 60px);
 }
+.main.expanded {
+  margin-left: 80px;
+}
 
 .content {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+.model-header {
+  margin-left: 30px;
+}
+
+.model-wrapper {
   overflow-x: auto;
-  padding-left: 20px;
+  padding-left: 24px;
   /* background-color: #fff; */
   border-radius: 4px;
-  margin: 20px;
+  /*margin: 20px;*/
   /*box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);*/
   min-height: 70vh;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 500;
+}
+
+.add-plans-container {
+  margin-left: 6px;
+}
+
+.add-plans-btns {
+  display: flex;
+  gap: 20px;
+}
+
+.add-plans-btn {
+  border-radius: 8px;
+  padding: 20px;
+  margin: 10px;
+  background-color: #555;
+  width: 150px;
+  height: 150px;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  color: white;
+  border: none;
+}
+
+.add-plans-btn:hover {
+  background-color: #5f5f5f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.add-plans-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }

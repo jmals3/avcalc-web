@@ -9,7 +9,10 @@
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1);
     height: 60px;
     background-color: #242424;
-    width: 100%;
+    width: calc(100vw - 290px);
+}
+.header.expanded {
+    width: calc(100vw - 120px);
 }
 
 .header-title {

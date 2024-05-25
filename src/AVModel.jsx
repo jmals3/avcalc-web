@@ -4,7 +4,7 @@ import _plandata from "./plandata.js";
 import _defaultPlan from "./defaultPlan.js";
 import {hyphenStrs} from "./functions.js";
 import ServiceCostSharingPopup from "./ServiceCostSharingPopUp.jsx";
-import {FaCaretLeft, FaTrash, FaCaretRight} from "react-icons/fa";
+import {FaCaretLeft, FaCaretRight, FaTimesCircle, FaTimes, FaPlusCircle} from "react-icons/fa";
 import './AVModel.css';
 
 function useDynamicRefs(rows, cols) {
@@ -27,9 +27,10 @@ function useDynamicRefs(rows, cols) {
     return refs;
 }
 
-const AVModel = () => {
+const AVModel = ({planData, updatePlanData}) => {
+// const AVModel = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const [planData, setPlanData] = useState(_plandata);
+    // const [planData, updatePlanData] = useState(_plandata);
 
     const rows = designRows.reduce((acc, group) => acc + group.sections.reduce((acc, section) => acc + section.fields.filter(field => field.editable).length, 0), 0);
     const cols = useMemo(() => planData.plans.reduce((acc, plan) => acc + plan.tiers.length, 0), [planData]);
@@ -203,7 +204,7 @@ const AVModel = () => {
         delete newPlanData.plans[planNum].av_paid_amt;
         delete newPlanData.plans[planNum].av_allowed_amt;
         delete newPlanData.plans[planNum].av;
-        setPlanData(newPlanData);
+        updatePlanData(newPlanData);
     }
 
     const removeCostShare = (field, planNum, tierNum) => {
@@ -212,10 +213,10 @@ const AVModel = () => {
         delete newPlanData.plans[planNum].av_paid_amt;
         delete newPlanData.plans[planNum].av_allowed_amt;
         delete newPlanData.plans[planNum].av;
-        setPlanData(newPlanData);
+        updatePlanData(newPlanData);
     }
 
-    const updatePlanData = (field, value, planNum, tierNum = 0) => {
+    const updateFieldData = (field, value, planNum, tierNum = 0) => {
         let newPlanData = {...planData};
         if (!field.tierSpecific) {
             if (Array.isArray(field.mapTo)) {
@@ -237,13 +238,13 @@ const AVModel = () => {
         delete newPlanData.plans[planNum].av_paid_amt;
         delete newPlanData.plans[planNum].av_allowed_amt;
         delete newPlanData.plans[planNum].av;
-        setPlanData(newPlanData);
+        updatePlanData(newPlanData);
     }
 
     function changePlanColor(e, planNum) {
         let newPlanData = {...planData};
         newPlanData.plans[planNum].color = e.target.value;
-        setPlanData(newPlanData);
+        updatePlanData(newPlanData);
     }
 
     const addPlan = (planNum) => {
@@ -251,13 +252,26 @@ const AVModel = () => {
         let newPlan = _defaultPlan;
         newPlan.color = colors[Math.floor(Math.random() * colors.length)];
         newPlanData.plans.splice(planNum + 1, 0, newPlan);
-        setPlanData(newPlanData);
+        updatePlanData(newPlanData);
     }
 
     const removePlan = (planNum) => {
         let newPlanData = {...planData};
         newPlanData.plans.splice(planNum, 1);
-        setPlanData(newPlanData);
+        updatePlanData(newPlanData);
+    }
+
+    const removeTier = (planNum, tierNum) => {
+        let newPlanData = {...planData};
+        newPlanData.plans[planNum].tiers.splice(tierNum, 1);
+        updatePlanData(newPlanData);
+    }
+
+    const addTier = (planNum, tierNum) => {
+        let newPlanData = {...planData};
+        let newTier = {...newPlanData.plans[planNum].tiers[tierNum]};
+        newPlanData.plans[planNum].tiers.splice(tierNum + 1, 0, newTier);
+        updatePlanData(newPlanData);
     }
 
     function movePlanLeft(planNum) {
@@ -266,7 +280,7 @@ const AVModel = () => {
             let temp = newPlanData.plans[planNum];
             newPlanData.plans[planNum] = newPlanData.plans[planNum - 1];
             newPlanData.plans[planNum - 1] = temp;
-            setPlanData(newPlanData);
+            updatePlanData(newPlanData);
         }
     }
 
@@ -276,7 +290,7 @@ const AVModel = () => {
             let temp = newPlanData.plans[planNum];
             newPlanData.plans[planNum] = newPlanData.plans[planNum + 1];
             newPlanData.plans[planNum + 1] = temp;
-            setPlanData(newPlanData);
+            updatePlanData(newPlanData);
         }
     }
 
@@ -335,7 +349,7 @@ const AVModel = () => {
                 client_id: calcData.client_id,
                 plans: updatedPlans,
             }
-            setPlanData(updatedPlanData);
+            updatePlanData(updatedPlanData);
         } catch (error) {
             console.error('Error:', error);
         } finally {
@@ -348,57 +362,57 @@ const AVModel = () => {
         switch (field.name) {
             case 'Separate Rx Deductible?':
                 if (val === 'Yes') {
-                    updatePlanData(getFieldWithMapTo('rx_ind_ded'), 0, planNum, tierNum);
-                    updatePlanData(getFieldWithMapTo('rx_fam_ded'), 0, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('rx_ind_ded'), 0, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('rx_fam_ded'), 0, planNum, tierNum);
                     // if (getTierDataValue(planData.plans[planNum].tiers[tierNum], getFieldWithMapTo('fam_embd_ind_ded')) >= 0) {
                     //     updatePlanData(getFieldWithMapTo('rx_embd_ind_ded'), 0, planNum, tierNum);
                     // }
                 } else {
-                    updatePlanData(getFieldWithMapTo('rx_ind_ded'), -1, planNum, tierNum);
-                    updatePlanData(getFieldWithMapTo('rx_fam_ded'), -1, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('rx_ind_ded'), -1, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('rx_fam_ded'), -1, planNum, tierNum);
                     // updatePlanData(getFieldWithMapTo('rx_embd_ind_ded'), -1, planNum, tierNum);
                 }
                 break;
             case 'Separate Rx Out-of-Pocket Max?':
                 if (val === 'Yes') {
-                    updatePlanData(getFieldWithMapTo('rx_ind_oopm'), 0, planNum, tierNum);
-                    updatePlanData(getFieldWithMapTo('rx_fam_oopm'), 0, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('rx_ind_oopm'), 0, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('rx_fam_oopm'), 0, planNum, tierNum);
                     // if (getTierDataValue(planData.plans[planNum].tiers[tierNum], getFieldWithMapTo('fam_embd_ind_oopm')) >= 0) {
                     //     updatePlanData(getFieldWithMapTo('rx_embd_ind_oopm'), 0, planNum, tierNum);
                     // }
                 } else {
-                    updatePlanData(getFieldWithMapTo('rx_ind_oopm'), -1, planNum, tierNum);
-                    updatePlanData(getFieldWithMapTo('rx_fam_oopm'), -1, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('rx_ind_oopm'), -1, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('rx_fam_oopm'), -1, planNum, tierNum);
                     // updatePlanData(getFieldWithMapTo('rx_embd_ind_oopm'), -1, planNum, tierNum);
                 }
                 break;
             case 'Deductible Type':
                 if (val === 'Family Embedded') {
-                    updatePlanData(getFieldWithMapTo('ded_type_family'), true, planNum, tierNum);
-                    updatePlanData(getFieldWithMapTo('fam_embd_ind_ded'), planData.plans[planNum].tiers[tierNum].ind_ded, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('ded_type_family'), true, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('fam_embd_ind_ded'), planData.plans[planNum].tiers[tierNum].ind_ded, planNum, tierNum);
                     // updatePlanData(getFieldWithMapTo('rx_embd_ind_ded'), planData.plans[planNum].tiers[tierNum].rx_ind_ded, planNum, tierNum);
                 } else if (val === 'Family') {
-                    updatePlanData(getFieldWithMapTo('ded_type_family'), true, planNum, tierNum);
-                    updatePlanData(getFieldWithMapTo('fam_embd_ind_ded'), -1, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('ded_type_family'), true, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('fam_embd_ind_ded'), -1, planNum, tierNum);
                     // updatePlanData(getFieldWithMapTo('rx_embd_ind_ded'), -1, planNum, tierNum);
                 } else {
-                    updatePlanData(getFieldWithMapTo('ded_type_family'), false, planNum, tierNum);
-                    updatePlanData(getFieldWithMapTo('fam_embd_ind_ded'), -1, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('ded_type_family'), false, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('fam_embd_ind_ded'), -1, planNum, tierNum);
                     // updatePlanData(getFieldWithMapTo('rx_embd_ind_ded'), -1, planNum, tierNum);
                 }
                 break;
             case 'Out-of-Pocket Max Type':
                 if (val === 'Family Embedded') {
-                    updatePlanData(getFieldWithMapTo('oopm_type_family'), true, planNum, tierNum);
-                    updatePlanData(getFieldWithMapTo('fam_embd_ind_oopm'), planData.plans[planNum].tiers[tierNum].ind_oopm, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('oopm_type_family'), true, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('fam_embd_ind_oopm'), planData.plans[planNum].tiers[tierNum].ind_oopm, planNum, tierNum);
                     // updatePlanData(getFieldWithMapTo('rx_embd_ind_oopm'), planData.plans[planNum].tiers[tierNum].rx_ind_oopm, planNum, tierNum);
                 } else if (val === 'Family') {
-                    updatePlanData(getFieldWithMapTo('oopm_type_family'), true, planNum, tierNum);
-                    updatePlanData(getFieldWithMapTo('fam_embd_ind_oopm'), -1, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('oopm_type_family'), true, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('fam_embd_ind_oopm'), -1, planNum, tierNum);
                     // updatePlanData(getFieldWithMapTo('rx_embd_ind_oopm'), -1, planNum, tierNum);
                 } else {
-                    updatePlanData(getFieldWithMapTo('oopm_type_family'), false, planNum, tierNum);
-                    updatePlanData(getFieldWithMapTo('fam_embd_ind_oopm'), -1, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('oopm_type_family'), false, planNum, tierNum);
+                    updateFieldData(getFieldWithMapTo('fam_embd_ind_oopm'), -1, planNum, tierNum);
                     // updatePlanData(getFieldWithMapTo('rx_embd_ind_oopm'), -1, planNum, tierNum);
                 }
                 break;
@@ -610,12 +624,12 @@ const AVModel = () => {
                    className={(field.format === 'service' ? 'service-input' : '') + (isDedCoins ? ' ded-coins' : '')}
                    readOnly={field.format === 'service'}
                    onClick={(e) => field.format === 'service' ? null : e.target.select()}
-                   onChange={(e) => updatePlanData(field, sanitizeInput(field, e.target.value), planNum, tierNum)}
+                   onChange={(e) => updateFieldData(field, sanitizeInput(field, e.target.value), planNum, tierNum)}
                    onKeyDown={(e) => {
                        if (e.key === 'Delete' || e.key === 'Backspace') {
                            let input = e.target.value.toString().replace(/[^0-9]/g, '');
                            let newVal = input.length > 1 ? input.slice(0, input.length - 1) : 0;
-                           updatePlanData(field, sanitizeInput(field, newVal), planNum, tierNum);
+                           updateFieldData(field, sanitizeInput(field, newVal), planNum, tierNum);
                        } else {
                            handleKeyDown(e, fieldNum, planNum, tierNum);
                        }
@@ -648,17 +662,16 @@ const AVModel = () => {
                                 {planNum > 0 ?
                                     <FaCaretLeft className={'icon-size'} onClick={() => movePlanLeft(planNum)}/>
                                     : <div style={{width: '21px'}}></div>}
-                                {planData.plans.length > 1 ?
-                                    <FaTrash className={'icon-size'} onClick={() => removePlan(planNum)}/>
-                                    : <div style={{width: '33px'}}></div>}
+                                <div className="color-pick">
+                                    <input type="color"
+                                           onChange={(e) => changePlanColor(e, planNum)}
+                                           value={plan.color}/>
+                                </div>
                             </div>
                             {getDataCellInput(val, field, planNum)}
                             <div style={{display: 'flex', alignItems: 'center'}}>
                                 {/*<input type="color" onChange={(e) => changePlanColor(e, planNum)}/>*/}
-                                <input type="color"
-                                       className={'plan-color-picker'}
-                                       onChange={(e) => changePlanColor(e, planNum)}
-                                       value={plan.color} />
+                                <FaTimesCircle className={'icon-size'} onClick={() => removePlan(planNum)}/>
                                 {/*<FaPlus className={'icon-size'} onClick={() => addPlan(planNum)}/>*/}
                                 {planNum < planData.plans.length - 1 ?
                                     <FaCaretRight className={'icon-size'} onClick={() => movePlanRight(planNum)}/>
@@ -675,12 +688,28 @@ const AVModel = () => {
         let val = getTierDataValue(tier, field)
         let inactive = val < 0 && field.nullable && field.format !== 'service';
         let isInfoGroup = group.name === 'Info';
+        let isInfoGroupTier = isInfoGroup && field.name === 'Network Tier';
         let isLastTier = tierNum === planData.plans[planNum].tiers.length - 1;
         return (
             <td className={`plan-data ${field.cssClass ?? ''} ${inactive ? 'inactive' : ''} ${field.editable ? 'editable' : ''} ${isLastTier ? 'last-tier' : ''}`}
                 style={isInfoGroup ? {backgroundColor: planData.plans[planNum].color ?? colors[planNum % colors.length]} : {}}
                 key={'av-' + field.name + '-' + planNum + '-' + tierNum}>
-                {inactive ? '' : getDataCellInput(val, field, planNum, tierNum)}
+                {inactive
+                    ? '' :
+                    isInfoGroupTier
+                        ? (
+                            <div className="tier-name-container">
+                                <div style={{width: '21px'}}></div>
+                                {getDataCellInput(val, field, planNum)}
+                                <div style={{width: '21px', display: 'flex'}}>
+                                    {tierNum > 0
+                                        ? <FaTimesCircle className={'remove-tier'} onClick={() => removeTier(planNum, tierNum)}/>
+                                        : <FaPlusCircle className={'remove-tier'} onClick={() => addTier(planNum, tierNum)}/>
+                                    }
+                                </div>
+                            </div>
+                        )
+                        : getDataCellInput(val, field, planNum, tierNum)}
             </td>
         );
     }
@@ -816,7 +845,7 @@ const AVModel = () => {
                     />
                 </div>
             )}
-            <p style={{fontSize: 'small'}}>* Deductible applies</p>
+            {/*<p style={{fontSize: 'small'}}>* Deductible applies</p>*/}
         </>
     )
 }

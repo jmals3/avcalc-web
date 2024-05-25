@@ -41,9 +41,23 @@
 }
 
 .av-table td.plan-data {
-    min-width: 130px;
+    width: 130px;
     text-align: center;
     font-size: small;
+}
+
+.av-table .color-pick {
+    width: 14px;
+    height: 14px;
+    overflow: hidden;
+    border-radius:100%;
+    border: solid white 1px;
+}
+
+.av-table input[type='color'] {
+    width: 10px;
+    height: 10px;
+    transform: scale(4);
 }
 
 .av-table td input, .av-table td select{
@@ -128,22 +142,29 @@
 }
 
 .av-table .plan-name-container {
+    min-width: 260px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.av-table .icon-size {
-    font-size: 0.8em;
-    padding: 0 4px;
+.av-table .tier-name-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.av-table .plan-color-picker {
-    /*padding: 2px;*/
-    margin-left: 2px;
-    width: 24px;
-    height: 28px;
-    border: none;
+.av-table .remove-tier {
+    display: none;
+}
+
+.av-table .tier-name-container:hover .remove-tier {
+    display: block;
+}
+
+.av-table .icon-size {
+    font-size: 14px;
+    padding: 0 4px;
 }
 
 .calcbtn {
@@ -166,27 +187,27 @@
 }
 .av-table .sticky-2 {
     position: sticky;
-    top: 46px;
+    top: 42px;
     z-index: 4;
 }
 .av-table .sticky-3 {
     position: sticky;
-    top: 87px;
+    top: 83px;
     z-index: 4;
 }
 .av-table .sticky-4 {
     position: sticky;
-    top: 128px;
+    top: 124px;
     z-index: 4;
 }
 .av-table .sticky-5 {
     position: sticky;
-    top: 170px;
+    top: 166px;
     z-index: 4;
 }
 .av-table .sticky-6 {
     position: sticky;
-    top: 211px;
+    top: 207px;
     z-index: 4;
 }
 

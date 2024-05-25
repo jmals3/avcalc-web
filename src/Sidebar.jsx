@@ -1,23 +1,22 @@
 import React, {useState} from 'react';
 import {FaBars, FaStar, FaRegStar, FaEllipsisH, FaCog, FaQuestionCircle, FaPlus} from "react-icons/fa";
 import './Sidebar.css';
-import _sessiondata from "./sessiondata.js";
 
-const Sidebar = ({selectedSession, onNavigation}) => {
-    const [sessionData, setSessionData] = useState(_sessiondata);
+const Sidebar = ({sessionData, updateSessionData, selectedSession, selectNewSession, openSettings, openHelp, sidebarOpen, toggleSidebar}) => {
     const [showMenuId, setShowMenuId] = useState(false);
-    const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
+    const [menuPosition, setMenuPosition] = useState({top: 0, left: 0});
     const [renameSessionId, setRenameSessionId] = useState(null);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Add this line
 
-    const toggleSidebar = () => {
-        setIsSidebarOpen(!isSidebarOpen);
+    const selectSession = (session) => {
+        const url = `/s/${session.guid}`;
+        window.history.pushState(session, '', url);
+        selectNewSession(session);
     }
 
     const handleEllipsisClick = (event, id) => {
         event.stopPropagation();
         const rect = event.target.getBoundingClientRect();
-        setMenuPosition({ top: rect.top + window.scrollY, left: rect.left + rect.width + 15 + window.scrollX });
+        setMenuPosition({top: rect.top + window.scrollY, left: rect.left + rect.width + 15 + window.scrollX});
         setShowMenuId(showMenuId !== id ? id : null);
     }
 
@@ -27,16 +26,16 @@ const Sidebar = ({selectedSession, onNavigation}) => {
 
     const toggleSessionStar = (session) => {
         const updatedSessionData = sessionData.map(s => {
-            if (s.id === session.id) {
+            if (s.guid === session.guid) {
                 s.starred = !s.starred;
             }
             return s;
         });
-        setSessionData(updatedSessionData);
+        updateSessionData(updatedSessionData);
     }
 
     const renameSession = (session) => {
-        setRenameSessionId(session.id);
+        setRenameSessionId(session.guid);
     }
 
     const handleSessionNameChange = (session, e) => {
@@ -45,12 +44,15 @@ const Sidebar = ({selectedSession, onNavigation}) => {
             return;
         }
         const updatedSessionData = sessionData.map(s => {
-            if (s.id === session.id) {
+            if (s.guid === session.guid) {
                 s.name = e.target.value;
             }
             return s;
         });
-        setSessionData(updatedSessionData);
+        updateSessionData(updatedSessionData);
+        if (session.guid === selectedSession.guid) {
+            selectNewSession({...selectedSession, name: e.target.value});
+        }
     }
 
     const handleRenameClose = () => {
@@ -59,93 +61,97 @@ const Sidebar = ({selectedSession, onNavigation}) => {
 
     const cloneSession = (session) => {
         const newSession = {...session, id: sessionData.length + 1};
-        setSessionData([newSession, ...sessionData]);
+        updateSessionData([newSession, ...sessionData]);
     }
 
     const deleteSession = (session) => {
         const confirmDelete = window.confirm("Are you sure you want to delete?");
         if (confirmDelete) {
-            const updatedSessionData = sessionData.filter(s => s.id !== session.id);
-            setSessionData(updatedSessionData);
+            const updatedSessionData = sessionData.filter(s => s.guid !== session.guid);
+            updateSessionData(updatedSessionData);
         }
     }
 
-    if (isSidebarOpen) {
+    if (sidebarOpen) {
         return (
             <div className="sidebar">
-                <button onClick={toggleSidebar} className="sidebar-toggle">
-                    <FaBars className="logo"/>
-                </button>
-                <button className="new-model-button">
-                    <div className="new-model-button-text">
-                        <span>+</span>
-                        <span>New Model</span>
+                <div className="sidebar-top">
+                    <button onClick={toggleSidebar} className="sidebar-toggle">
+                        <FaBars className="logo"/>
+                    </button>
+                    <button className="new-model-button">
+                        <div className="new-model-button-text">
+                            <span>+</span>
+                            <span>New Model</span>
+                        </div>
+                    </button>
+                    <div className="sessions">
+                        <table>
+                            <tbody>
+                            {sessionData.map((session, index) => {
+                                return (
+                                    <tr key={index}
+                                        className={`session ${selectedSession.guid === session.guid ? 'selected-session' : ''}`}
+                                        onClick={() => selectSession(session)}>
+                                        <td className="session-star">
+                                            {session.starred ? <FaStar/> : <FaRegStar/>}
+                                        </td>
+                                        <td className="session-name">
+                                            {renameSessionId === session.guid ?
+                                                <>
+                                                    <div
+                                                        className="rename-overlay"
+                                                        onClick={handleRenameClose}
+                                                    />
+                                                    <input
+                                                        className="session-rename"
+                                                        value={session.name}
+                                                        onChange={(e) => handleSessionNameChange(session, e)}
+                                                        onKeyDown={(e) => handleSessionNameChange(session, e)}
+                                                        autoFocus
+                                                    />
+                                                </> : session.name}
+                                        </td>
+                                        <td className={`session-ellipsis ${showMenuId !== session.guid && 'hidden'}`}
+                                            onClick={(e) => handleEllipsisClick(e, session.guid)}>
+                                            <FaEllipsisH/>
+                                            {showMenuId === session.guid && (
+                                                <div
+                                                    className="menu-overlay"
+                                                    onClick={handleMenuClose}
+                                                >
+                                                    <div
+                                                        className="menu"
+                                                        style={{top: menuPosition.top, left: menuPosition.left}}
+                                                        onBlur={handleMenuClose}
+                                                        tabIndex="0"
+                                                    >
+                                                        <ul>
+                                                            <li onClick={() => toggleSessionStar(session)}>{session.starred ? 'Unstar' : 'Star'}</li>
+                                                            <li onClick={() => renameSession(session)}>Rename</li>
+                                                            <li onClick={() => cloneSession(session)}>Clone</li>
+                                                            <li onClick={() => deleteSession(session)}>Delete</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                            </tbody>
+                        </table>
                     </div>
-                </button>
-                <table className="sessions">
-                    <tbody>
-                    {sessionData.map((session, index) => {
-                        return (
-                            <tr key={index}
-                                className={`session ${selectedSession.id === session.id ? 'selected-session' : ''}`}
-                                onClick={() => onNavigation(session)}>
-                                <td className="session-star">
-                                    {session.starred ? <FaStar/> : <FaRegStar/>}
-                                </td>
-                                <td className="session-name">
-                                    {renameSessionId === session.id ?
-                                        <>
-                                            <div
-                                                className="rename-overlay"
-                                                onClick={handleRenameClose}
-                                            />
-                                            <input
-                                                className="session-rename"
-                                                value={session.name}
-                                                onChange={(e) => handleSessionNameChange(session, e)}
-                                                onKeyDown={(e) => handleSessionNameChange(session, e)}
-                                                autoFocus
-                                            />
-                                        </> : session.name}
-                                </td>
-                                <td className={`session-ellipsis ${showMenuId !== session.id && 'hidden'}`}
-                                    onClick={(e) => handleEllipsisClick(e, session.id)}>
-                                    <FaEllipsisH/>
-                                    {showMenuId === session.id && (
-                                        <div
-                                            className="menu-overlay"
-                                            onClick={handleMenuClose}
-                                        >
-                                            <div
-                                                className="menu"
-                                                style={{top: menuPosition.top, left: menuPosition.left}}
-                                                onBlur={handleMenuClose}
-                                                tabIndex="0"
-                                            >
-                                                <ul>
-                                                    <li onClick={() => toggleSessionStar(session)}>{session.starred ? 'Unstar' : 'Star'}</li>
-                                                    <li onClick={() => renameSession(session)}>Rename</li>
-                                                    <li onClick={() => cloneSession(session)}>Clone</li>
-                                                    <li onClick={() => deleteSession(session)}>Delete</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    )}
-                                </td>
-                            </tr>
-                        );
-                    })}
-                    </tbody>
-                </table>
+                </div>
                 <nav className="nav">
                     <div className="nav-bottom">
                         <hr/>
                         <ul className="nav-list">
-                            <li className="nav-item" onClick={() => onNavigation({title: 'Settings'})}>
+                            <li className="nav-item" onClick={() => openSettings()}>
                                 <FaCog className="icon"/>
                                 Settings
                             </li>
-                            <li className="nav-item" onClick={() => onNavigation({title: 'Help'})}>
+                            <li className="nav-item" onClick={() => openHelp()}>
                                 <FaQuestionCircle className="icon"/>
                                 Help
                             </li>
@@ -165,11 +171,11 @@ const Sidebar = ({selectedSession, onNavigation}) => {
                         <hr/>
                         <ul className="nav-list">
                             <li className="nav-item"
-                                onClick={() => onNavigation({title: 'Settings'})}>
+                                onClick={() => openSettings()}>
                                 <FaCog style={{marginLeft: '12px'}}/>
                             </li>
                             <li className="nav-item"
-                                onClick={() => onNavigation({title: 'Help'})}>
+                                onClick={() => openHelp()}>
                                 <FaQuestionCircle style={{marginLeft: '12px'}}/>
                             </li>
                         </ul>
