@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useMemo} from 'react';
-import {designRows, colors} from "./constants.js";
+import {designRows, colors, api} from "./constants.js";
 import _plandata from "./plandata.js";
 import _defaultPlan from "./defaultPlan.js";
 import {hyphenStrs} from "./functions.js";
@@ -327,7 +327,7 @@ const AVModel = ({planData, updatePlanData}) => {
         setIsLoading(true);
         checkPlanDataBeforeCalc();
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/av/calc`, {
+            const response = await fetch(api + '/av/calc', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -335,6 +335,7 @@ const AVModel = ({planData, updatePlanData}) => {
                 body: JSON.stringify(
                     {client_id: planData.client_id, plans: planData.plans.filter(p => !p.av)}
                 ),
+                credentials: 'include',
             });
             const calcData = await response.json();
             let updatedPlans = [];
@@ -660,9 +661,9 @@ const AVModel = ({planData, updatePlanData}) => {
                         <div className="plan-name-container">
                             <div style={{display: 'flex', alignItems: 'center'}}>
                                 {planNum > 0 ?
-                                    <FaCaretLeft className={'icon-size'} onClick={() => movePlanLeft(planNum)}/>
+                                    <FaCaretLeft className={'icon-size'} title="Move plan left" onClick={() => movePlanLeft(planNum)}/>
                                     : <div style={{width: '21px'}}></div>}
-                                <div className="color-pick">
+                                <div className="color-pick" title={"Change plan color"}>
                                     <input type="color"
                                            onChange={(e) => changePlanColor(e, planNum)}
                                            value={plan.color}/>
@@ -671,10 +672,10 @@ const AVModel = ({planData, updatePlanData}) => {
                             {getDataCellInput(val, field, planNum)}
                             <div style={{display: 'flex', alignItems: 'center'}}>
                                 {/*<input type="color" onChange={(e) => changePlanColor(e, planNum)}/>*/}
-                                <FaTimesCircle className={'icon-size'} onClick={() => removePlan(planNum)}/>
+                                <FaTimesCircle className={'icon-size'} title="Remove plan" onClick={() => removePlan(planNum)} />
                                 {/*<FaPlus className={'icon-size'} onClick={() => addPlan(planNum)}/>*/}
                                 {planNum < planData.plans.length - 1 ?
-                                    <FaCaretRight className={'icon-size'} onClick={() => movePlanRight(planNum)}/>
+                                    <FaCaretRight className={'icon-size'} title="Move plan right" onClick={() => movePlanRight(planNum)}/>
                                     : <div style={{width: '21px'}}></div>}
                             </div>
                         </div>

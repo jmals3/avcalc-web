@@ -1,59 +1,63 @@
 import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import './LoginPopUp.css';
+import {api} from './constants.js';
+import './SignupPopUp.css';
 import './PopUp.css';
-import {api} from "./constants.js";
 
-const LoginPopUp = ({user, updateUser}) => {
+const SignupPopUp = ({user, updateUser}) => {
     const navigate = useNavigate();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [password2, setPassword2] = useState('');
+    const [showPassword2, setShowPassword2] = useState(false);
 
-    const [loginError, setLoginError] = useState('');
+    const [signuperror, setSignupError] = useState('');
 
     const handleEmailChange = (e) => setUsername(e.target.value);
     const handlePasswordChange = (e) => setPassword(e.target.value);
     const toggleShowPassword = () => setShowPassword(!showPassword);
+    // const handlePassword2Change = (e) => setPassword2(e.target.value);
+    // const toggleShowPassword2 = () => setShowPassword2(!showPassword2);
 
-    const handleLogIn = async (e) => {
+    const handleSignUp = async (e) => {
         e.preventDefault();
+        // console.log('Email:', username);
+        // console.log('Password:', password);
 
-        try {
-            const response = await fetch(api + '/authentication/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify({username, password}),
-            });
+        const response = await fetch(api + '/authentication/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({username, password}),
+        });
 
-            if (response.ok) {
-                console.log('Login successful');
-                const user = await response.json();
-                updateUser(user);
-                navigate('/s/');
-            } else {
-                console.error('Login failed');
-                const errorBody = await response.json();
-                const error = errorBody.error;
-                setLoginError(error || 'Signup failed');
-            }
-        } catch (error) {
-            console.error('Network error:', error);
-            setLoginError('Failed to connect to server');
+        // console.log(api + '/authentication/signup');
+
+        if (response.ok) {
+            console.log('Signup successful');
+            const user = await response.json();
+            updateUser(user);
+            navigate('/s/');
+        } else {
+            console.error('Signup failed');
+            const errorBody = await response.json();
+            const error = errorBody.error;
+            setSignupError(error || 'Signup failed');
         }
-    }
+    };
 
     return (
-        <div className="login-container">
-            <div className="login-box">
-                <h2>Log In</h2>
-                <p>Actuarial modeling made easy</p>
-                <form onSubmit={handleLogIn}>
+        <div className="signup-container">
+            <div className="signup-box">
+                <h2>Sign Up</h2>
+                <p>Get ahead with Easy AV</p>
+                <form onSubmit={handleSignUp}>
                     <input
+                        name={"username"}
                         type="text"
                         placeholder="Email"
                         value={username}
@@ -61,8 +65,9 @@ const LoginPopUp = ({user, updateUser}) => {
                     />
                     <div className="password-container">
                         <input
+                            name={"password"}
                             type={showPassword ? "text" : "password"}
-                            placeholder="Password"
+                            placeholder="Password (6+ characters)"
                             value={password}
                             onChange={handlePasswordChange}
                         />
@@ -74,16 +79,31 @@ const LoginPopUp = ({user, updateUser}) => {
                             {showPassword ? "hide" : "show"}
                         </button>
                     </div>
-                    <a href="/forgot-password" className="forgot-password-link">Forgot password?</a>
-                    <p className="login-error">{loginError}</p>
-                    <button type="submit" className="login-btn login-std-btn">Log in</button>
+                    <p className="signup-error">{signuperror}</p>
+                    {/*<div className="password-container">*/}
+                    {/*    <input*/}
+                    {/*        type={showPassword2 ? "text" : "password"}*/}
+                    {/*        placeholder="Confirm Password"*/}
+                    {/*        value={password2}*/}
+                    {/*        onChange={handlePassword2Change}*/}
+                    {/*    />*/}
+                    {/*    <button*/}
+                    {/*        type="button"*/}
+                    {/*        className="show-password-btn"*/}
+                    {/*        onClick={toggleShowPassword2}*/}
+                    {/*    >*/}
+                    {/*        {showPassword2 ? "hide" : "show"}*/}
+                    {/*    </button>*/}
+                    {/*</div>*/}
+
+                    <button type="submit" className="signup-btn signup-std-btn">Sign up</button>
                 </form>
                 {/*<div className="divider">*/}
                 {/*    <p>or</p>*/}
                 {/*</div>*/}
-                {/*<button className="login-btn login-apple-btn">Log in with Apple</button>*/}
-                {/*<button className="login-btn login-google-btn">*/}
-                {/*    <div className="oauth-login-content">*/}
+                {/*<button className="signup-btn signup-apple-btn">Log in with Apple</button>*/}
+                {/*<button className="signup-btn signup-google-btn">*/}
+                {/*    <div className="oauth-signup-content">*/}
                 {/*        <svg*/}
                 {/*            version="1.1"*/}
                 {/*            xmlns="http://www.w3.org/2000/svg"*/}
@@ -103,8 +123,8 @@ const LoginPopUp = ({user, updateUser}) => {
                 {/*        Log in with Google*/}
                 {/*    </div>*/}
                 {/*</button>*/}
-                {/*<button className="login-btn login-microsoft-btn">*/}
-                {/*    <div className="oauth-login-content">*/}
+                {/*<button className="signup-btn signup-microsoft-btn">*/}
+                {/*    <div className="oauth-signup-content">*/}
                 {/*        <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">*/}
                 {/*            <title>MS-SymbolLockup</title>*/}
                 {/*            <rect x="1" y="1" width="9" height="9" fill="#f25022"/>*/}
@@ -115,12 +135,12 @@ const LoginPopUp = ({user, updateUser}) => {
                 {/*        Log in with Microsoft*/}
                 {/*    </div>*/}
                 {/*</button>*/}
-                <p className="signup-link">
-                    New to Easy AV? <a href="/authentication/signup">Join now</a>
+                <p className="login-link">
+                    Been here before? <a href="/authentication/login">Log In</a>
                 </p>
             </div>
         </div>
     );
 };
 
-export default LoginPopUp;
+export default SignupPopUp;

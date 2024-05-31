@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import md5 from 'js-md5';
+import {api} from './constants.js';
 import './UploadBox.css';
 
 function FileUpload() {
     const [selectedFile, setSelectedFile] = useState();
     const [isActive, setIsActive] = useState(false);
-
-    const api = import.meta.env.VITE_API_ENDPOINT;
 
     const onDragOver = (event) => {
         event.preventDefault();
@@ -39,9 +38,10 @@ function FileUpload() {
             formData.append('size', selectedFile.size.toString());
             formData.append('hash', fileHash);
     
-            const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/document/upload`, {
+            const response = await fetch(api + '/document/upload', {
                 method: 'POST',
                 body: formData,
+                credentials: 'include',
             });
     
             if (!response.ok) {

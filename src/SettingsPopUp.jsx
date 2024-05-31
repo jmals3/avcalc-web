@@ -2,8 +2,7 @@ import React, {useState} from 'react';
 import {FaCreditCard, FaTimes, FaUser} from "react-icons/fa";
 import './PopUp.css';
 
-const SettingsPopUp = ({closeSettings}) => {
-    const [selectedTab, setSelectedTab] = useState('Account');
+const SettingsPopUp = ({closeSettings, selectedTab, setSelectedTab}) => {
 
     const accountSettings = (
         // TODO: implement account settings

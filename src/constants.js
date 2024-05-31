@@ -1,3 +1,4 @@
+export const api = import.meta.env.VITE_API_ENDPOINT;
 export const colors = ['#4CAF50', '#FFC107', '#2196F3', '#FF5722', '#009688', '#9C27B0'];
 // export const planColors = ['#a6e2a8', '#ffd453', '#6fbfff', '#ff916e', '#3cc9bc', '#d376e3'];
 

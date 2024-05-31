@@ -40,11 +40,16 @@ body, html {
     cursor: pointer;
     border: none;
     border-radius: 5px;
+    width: 100px;
 }
 
-.landing-page .auth-buttons .trial-button {
-    background-color: #4CAF50;
+.landing-page .auth-buttons .signup-button {
+    background-color: #555;
     color: white;
+}
+
+.landing-page .auth-buttons button:hover {
+    background-color: #777;
 }
 
 .landing-page .hero-section {

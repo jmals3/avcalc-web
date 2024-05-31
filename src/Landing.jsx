@@ -1,15 +1,23 @@
 import React, {useState} from 'react';
 import LoginPopUp from "./LoginPopUp.jsx";
 import './Landing.css';
+import SignupPopUp from "./SignupPopUp.jsx";
 
-const Landing = () => {
+const Landing = ({user, updateUser}) => {
     // const navigate = useNavigate();
     const [loginPopUpOpen, setLoginPopUpOpen] = useState(false);
+    const [signupPopUpOpen, setSignupPopUpOpen] = useState(false);
 
     const closeLoginPopUp = () => {
         const url = `/`;
         window.history.pushState('', '', url);
         setLoginPopUpOpen(false);
+    }
+
+    const closeSignupPopUp = () => {
+        const url = `/`;
+        window.history.pushState('', '', url);
+        setSignupPopUpOpen(false);
     }
 
     return (
@@ -28,12 +36,20 @@ const Landing = () => {
                 <div className="auth-buttons">
                     <button
                         onClick={() => {
-                            const url = `/login`;
+                            const url = `/authentication/login`;
                             window.history.pushState('', '', url);
                             setLoginPopUpOpen(true)}
                         }
                     >Log In</button>
-                    <button className="trial-button">Start My Free Trial</button>
+                    <button
+                        className={"signup-button"}
+                        onClick={() => {
+                            const url = `/authentication/signup`;
+                            window.history.pushState('', '', url);
+                            setSignupPopUpOpen(true)}
+                        }
+                    >Sign Up
+                    </button>
                 </div>
             </header>
 
@@ -152,7 +168,9 @@ const Landing = () => {
             </section>
 
             {loginPopUpOpen && <div className="overlay" onClick={() => closeLoginPopUp()}></div>}
-            {loginPopUpOpen && <LoginPopUp closeLoginPopUp={closeLoginPopUp}/>}
+            {loginPopUpOpen && <LoginPopUp  user={user} updateUser={updateUser} />}
+            {signupPopUpOpen && <div className="overlay" onClick={() => closeSignupPopUp()}></div>}
+            {signupPopUpOpen && <SignupPopUp  user={user} updateUser={updateUser} />}
         </div>
 
     );
