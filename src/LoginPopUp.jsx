@@ -3,6 +3,7 @@ import {useNavigate} from "react-router-dom";
 import './LoginPopUp.css';
 import './PopUp.css';
 import {api} from "./constants.js";
+import {loginApi} from "./api/auth.js";
 
 const LoginPopUp = ({user, updateUser}) => {
     const navigate = useNavigate();
@@ -20,32 +21,16 @@ const LoginPopUp = ({user, updateUser}) => {
     const handleLogIn = async (e) => {
         e.preventDefault();
 
-        try {
-            const response = await fetch(api + '/authentication/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify({username, password}),
-            });
-
-            if (response.ok) {
-                console.log('Login successful');
-                const user = await response.json();
-                updateUser(user);
-                navigate('/s/');
-            } else {
-                console.error('Login failed');
-                const errorBody = await response.json();
-                const error = errorBody.error;
-                setLoginError(error || 'Signup failed');
-            }
-        } catch (error) {
-            console.error('Network error:', error);
-            setLoginError('Failed to connect to server');
+        const result = await loginApi(username, password);
+        if (result.success) {
+            console.log('Login successful');
+            updateUser(result.user);
+            navigate('/s/');
+        } else {
+            console.error('Login failed');
+            setLoginError(result.error);
         }
-    }
+    };
 
     return (
         <div className="login-container">

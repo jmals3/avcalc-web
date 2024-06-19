@@ -164,12 +164,27 @@ function App({user, updateUser}) {
     }
 
     const addDefaultPlan = () => {
-        // TODO: update this so it's done server side
-        const newPlan = defaultplan;
-        const updatedPlanData = {
-            plans: [...planData.plans, newPlan]
-        };
-        setPlanData(updatedPlanData);
+        if (!selectedSession) {
+            fetch(api + '/session/' + selectedSession.guid + '/plans', {
+                method: 'GET',
+                credentials: 'include',
+            })
+                .then(response => response.json())
+                .then(data => {
+                    setPlanData(data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        fetch(api + '/session/' + selectedSession.guid + '/plans', {
+            method: 'GET',
+            credentials: 'include',
+        })
+            .then(response => response.json())
+            .then(data => {
+                setPlanData(data);
+            })
+            .catch(error => console.error('Error:', error));
+        setSelectedSessionName(selectedSession?.name ?? '')
     }
 
     const openPlanImportPopUp = () => {
@@ -195,7 +210,7 @@ function App({user, updateUser}) {
                 <Header user={user} updateUser={updateUser} sidebarOpen={sidebarOpen} openSettings={openSettings}/>
                 <div className="content">
                     <div className="model-header">
-                        <h2 onClick={() => setIsEditingSessionName(true)}>
+                        <h2 onClick={() => setIsEditingSessionName(true)} style={{cursor: 'pointer'}}>
                             {isEditingSessionName ? (
                                 <input
                                     type="text"

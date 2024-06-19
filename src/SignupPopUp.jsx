@@ -3,6 +3,7 @@ import {useNavigate} from "react-router-dom";
 import {api} from './constants.js';
 import './SignupPopUp.css';
 import './PopUp.css';
+import {signUpApi} from "./api/auth.js";
 
 const SignupPopUp = ({user, updateUser}) => {
     const navigate = useNavigate();
@@ -23,30 +24,15 @@ const SignupPopUp = ({user, updateUser}) => {
 
     const handleSignUp = async (e) => {
         e.preventDefault();
-        // console.log('Email:', username);
-        // console.log('Password:', password);
 
-        const response = await fetch(api + '/authentication/signup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify({username, password}),
-        });
-
-        // console.log(api + '/authentication/signup');
-
-        if (response.ok) {
+        const result = await signUpApi(username, password);
+        if (result.success) {
             console.log('Signup successful');
-            const user = await response.json();
-            updateUser(user);
+            updateUser(result.user);
             navigate('/s/');
         } else {
             console.error('Signup failed');
-            const errorBody = await response.json();
-            const error = errorBody.error;
-            setSignupError(error || 'Signup failed');
+            setSignupError(result.error);
         }
     };
 
