@@ -2,7 +2,7 @@ export const api = import.meta.env.VITE_API_ENDPOINT;
 export const colors = ['#4CAF50', '#FFC107', '#2196F3', '#FF5722', '#009688', '#9C27B0'];
 // export const planColors = ['#a6e2a8', '#ffd453', '#6fbfff', '#ff916e', '#3cc9bc', '#d376e3'];
 
-const avColors = {
+export const avColors = {
     info:
         {
             info: '#222',
@@ -582,3 +582,156 @@ export const designRows =
                 ],
         }
     ];
+
+export const designRowsMini = [
+    {
+        name: 'Plan',
+        color: avColors.info.plan,
+        fields: [
+            {
+                name: 'Plan Name',
+                editable: true,
+                defaultValue: 'Plan Name',
+                mapTo: 'name',
+                color: avColors.info.fields,
+                format: 'text',
+            },
+            {
+                name: 'Scenario',
+                editable: true,
+                defaultValue: 'Current',
+                mapTo: 'scenario',
+                color: avColors.info.fields,
+                format: 'text',
+            }
+        ]
+    },
+    {
+        name: 'Global',
+        color: avColors.global.global,
+        fields: [
+            {
+                name: 'Deductible (Individual / Family)',
+                editable: true,
+                defaultValue: '1000 / 2000',
+                mapTo: 'deductible',
+                color: avColors.global.fields,
+                format: 'text',
+            },
+            {
+                name: 'Out-of-Pocket Maximum (Individual / Family)',
+                editable: true,
+                defaultValue: '3000 / 6000',
+                mapTo: 'out_of_pocket_max',
+                color: avColors.global.fields,
+                format: 'text',
+            },
+            {
+                name: 'Member Coinsurance %',
+                editable: true,
+                defaultValue: '20%',
+                mapTo: 'coinsurance',
+                color: avColors.global.fields,
+                format: 'percent',
+            }
+        ]
+    },
+    {
+        name: 'Office Visits',
+        color: avColors.medicalServices.medicalServices,
+        fields: [
+            {
+                name: 'Preventative',
+                editable: true,
+                defaultValue: 'Fully covered',
+                mapTo: 'preventative',
+                color: avColors.medicalServices.fields,
+                format: 'text',
+            },
+            {
+                name: 'Primary Care',
+                editable: true,
+                defaultValue: '0%',
+                mapTo: 'primary_care',
+                color: avColors.medicalServices.fields,
+                format: 'percent',
+            },
+            {
+                name: 'Specialist',
+                editable: true,
+                defaultValue: '0%',
+                mapTo: 'specialist',
+                color: avColors.medicalServices.fields,
+                format: 'percent',
+            }
+        ]
+    },
+    {
+        name: 'Hospital and Facility',
+        color: avColors.medicalServices.hospitalAndFacility,
+        fields: [
+            {
+                name: 'Emergency Room',
+                editable: true,
+                defaultValue: '0%',
+                mapTo: 'emergency_room',
+                color: avColors.medicalServices.fields,
+                format: 'percent',
+            },
+            {
+                name: 'Inpatient Facility',
+                editable: true,
+                defaultValue: '0%',
+                mapTo: 'inpatient_facility',
+                color: avColors.medicalServices.fields,
+                format: 'percent',
+            },
+            {
+                name: 'Outpatient Surgery',
+                editable: true,
+                defaultValue: '0%',
+                mapTo: 'outpatient_surgery',
+                color: avColors.medicalServices.fields,
+                format: 'percent',
+            }
+        ]
+    },
+    {
+        name: 'Prescription Drugs',
+        color: avColors.rx.rx,
+        fields: [
+            {
+                name: 'Generic',
+                editable: true,
+                defaultValue: '0%',
+                mapTo: 'generic_drugs',
+                color: avColors.rx.fields,
+                format: 'percent',
+            },
+            {
+                name: 'Preferred Brand',
+                editable: true,
+                defaultValue: '0%',
+                mapTo: 'preferred_brand',
+                color: avColors.rx.fields,
+                format: 'percent',
+            },
+            {
+                name: 'Non-Preferred Brand',
+                editable: true,
+                defaultValue: '0%',
+                mapTo: 'non_preferred_brand',
+                color: avColors.rx.fields,
+                format: 'percent',
+            },
+            {
+                name: 'Specialty',
+                editable: true,
+                defaultValue: '0%',
+                mapTo: 'specialty_drugs',
+                color: avColors.rx.fields,
+                format: 'percent',
+            }
+        ]
+    }
+];

@@ -5,10 +5,18 @@ import Header from "./Header.jsx";
 import AVModel from "./AVModel.jsx";
 import SettingsPopUp from "./SettingsPopUp.jsx";
 import HelpPopUp from "./HelpPopUp.jsx";
-import defaultplan from "./defaultplan.js";
-import {api} from "./constants.js";
 import './App.css';
 import {extractUserFromToken} from "./functions.js";
+import {
+    addSessionPlanDefaultApi,
+    createSessionApi,
+    getSessionPlansApi,
+    getSessionsApi,
+    updateSessionApi
+} from "./api/session.js";
+import AVModelMini from "./AVModelMini.jsx";
+import AVModelMini3 from "./AVModelMini3.jsx";
+import ChatSidePane from "./ChatSidePane.jsx";
 
 
 function App({user, updateUser}) {
@@ -37,36 +45,35 @@ function App({user, updateUser}) {
     }, [user]);
 
     useEffect(() => {
-        fetch(api + '/sessions', {
-            method: 'GET',
-            credentials: 'include'
-        })
-            .then(response => response.json())
-            .then(data => {
-                setSessionData(data);
-                if (!data || data.length === 0) {
+        const getSessions = async () => {
+            const result = await getSessionsApi();
+            if (result.success) {
+                const sessions = result.sessions;
+                setSessionData(sessions);
+                if (!sessions || sessions.length === 0) {
                     setSessionData([]);
                     return;
                 }
                 if (sid) {
-                    const session = data.find(s => s.guid === sid);
+                    const session = sessions.find(s => s.guid === sid);
                     if (session) {
                         setSelectedSession(session);
                     } else {
-                        const session = data[0];
+                        const session = sessions[0];
                         setSelectedSession(session);
                         const url = `/s/${session.guid}`;
                         window.history.pushState(session, '', url);
                     }
                 } else {
-                    const session = data[0];
+                    const session = sessions[0];
                     setSelectedSession(session);
                     const url = `/s/${session.guid}`;
                     window.history.pushState(session, '', url);
-
                 }
-            })
-            .catch(error => console.error('Error:', error));
+            }
+        }
+
+        getSessions();
     }, []);
 
     useEffect(() => {
@@ -83,19 +90,18 @@ function App({user, updateUser}) {
         };
     }, []);
 
-    useEffect(() => {
+    const getSessionPlans = async () => {
         if (selectedSession) {
-            fetch(api + '/session/' + selectedSession.guid + '/plans', {
-                method: 'GET',
-                credentials: 'include',
-            })
-                .then(response => response.json())
-                .then(data => {
-                    setPlanData(data);
-                })
-                .catch(error => console.error('Error:', error));
+            const result = await getSessionPlansApi(selectedSession.guid);
+            if (result.success) {
+                setPlanData(result.planData);
+            }
             setSelectedSessionName(selectedSession?.name ?? '')
         }
+    }
+
+    useEffect(() => {
+        getSessionPlans();
     }, [selectedSession]);
 
     const toggleSidebar = () => {
@@ -141,21 +147,10 @@ function App({user, updateUser}) {
             }
         });
 
-        setSessionData(updatedSessionData);
-
-        setSelectedSession({...selectedSession, name: selectedSessionName});
-
-        const response = await fetch(api + '/session/' + selectedSession.guid, {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({name: selectedSessionName}),
-        });
-
-        if (!response.ok) {
-            console.error('Error:', response.statusText);
+        const result = await updateSessionApi(selectedSession.guid, {name: selectedSessionName});
+        if (result.success) {
+            setSessionData(updatedSessionData);
+            setSelectedSession({...selectedSession, name: selectedSessionName});
         }
     }
 
@@ -163,28 +158,22 @@ function App({user, updateUser}) {
         setPlanData(newPlanData);
     }
 
-    const addDefaultPlan = () => {
+    const addDefaultPlan = async () => {
         if (!selectedSession) {
-            fetch(api + '/session/' + selectedSession.guid + '/plans', {
-                method: 'GET',
-                credentials: 'include',
-            })
-                .then(response => response.json())
-                .then(data => {
-                    setPlanData(data);
-                })
-                .catch(error => console.error('Error:', error));
+            const result = await createSessionApi();
+            if (result.success) {
+                updateSessionData([result.session, ...sessionData]);
+                const url = `/s/${result.session.guid}`;
+                window.history.pushState(result.session, '', url);
+                selectNewSession(result.session);
+            }
         }
-        fetch(api + '/session/' + selectedSession.guid + '/plans', {
-            method: 'GET',
-            credentials: 'include',
-        })
-            .then(response => response.json())
-            .then(data => {
-                setPlanData(data);
-            })
-            .catch(error => console.error('Error:', error));
-        setSelectedSessionName(selectedSession?.name ?? '')
+
+        const result = await addSessionPlanDefaultApi(selectedSession.guid)
+        if (result.success) {
+            await getSessionPlans();
+        }
+
     }
 
     const openPlanImportPopUp = () => {
@@ -256,11 +245,12 @@ function App({user, updateUser}) {
                                     </div>
                                 </div>
                             )
-                            : <AVModel planData={planData} updatePlanData={updatePlanData}/>
+                            : <AVModelMini3 planData={planData} updatePlanData={updatePlanData} />
                         }
                     </div>
                 </div>
             </div>
+            <ChatSidePane />
 
             {settingsPopUpOpen && <div className="overlay" onClick={() => setSettingsPopUpOpen(false)}></div>}
             {settingsPopUpOpen && <SettingsPopUp closeSettings={closeSettings} selectedTab={settingsTab} setSelectedTab={updateSettingsTab}/>}

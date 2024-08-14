@@ -11,7 +11,7 @@ export const logoutApi = async () => {
 
 export const loginApi = async (username, password) => {
     try {
-        const response = await fetch(api + 'authentication/login', {
+        const response = await fetch(api + '/authentication/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

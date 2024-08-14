@@ -144,9 +144,18 @@ hr {
 
 .session-name {
   /*min-width: 150px;*/
+  max-width: 182px;
   width: 100%;
   padding: 0 10px;
   text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: smaller;
+}
+
+.session:hover .session-name {
+  white-space: normal;
 }
 
 .session-ellipsis {
@@ -231,7 +240,6 @@ hr {
 }
 
 .session-rename {
-  font-size: medium;
   width: 100%;
   box-sizing: border-box;
   position: relative;

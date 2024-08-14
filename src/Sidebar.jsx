@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {FaBars, FaStar, FaRegStar, FaEllipsisH, FaCog, FaQuestionCircle, FaPlus} from "react-icons/fa";
 import './Sidebar.css';
 import {api} from "./constants.js";
+import {cloneSessionApi, createSessionApi, deleteSessionApi, updateSessionApi} from "./api/session.js";
 
 const Sidebar = ({
                      sessionData,
@@ -34,64 +35,38 @@ const Sidebar = ({
         setShowMenuId(null);
     }
 
-    const createNewSession = () => {
-        const currentDateTime = new Date().toLocaleString();
-
-        fetch(api + '/session', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ dateTime: currentDateTime })
-        })
-            .then(response => {
-                if (!response.ok) {
-                    console.error('Session creation failed');
-                    throw new Error('Session creation failed');
-                }
-                return response.json();
-            })
-            .then(data => {
-                updateSessionData([data, ...sessionData]);
-                const url = `/s/${data.guid}`;
-                window.history.pushState(data, '', url);
-                selectNewSession(data);
-            })
-            .catch(error => console.error('Error:', error));
+    const createNewSession = async () => {
+        const result = await createSessionApi();
+        if (result.success) {
+            updateSessionData([result.session, ...sessionData]);
+            const url = `/s/${result.session.guid}`;
+            window.history.pushState(result.session, '', url);
+            selectNewSession(result.session);
+        }
     }
 
     const renameSession = (session) => {
         setRenameSessionId(session.guid);
     }
 
-    const updateSession = (guid, updates) => {
-        fetch(api + '/session/' + guid, {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updates)
-        })
-            .then(response => response.json())
-            .then(data => {
-                const updatedSessionData = sessionData.map(s => {
-                    if (s.guid === guid) {
-                        return data;
-                    }
-                    return s;
-                });
-                updateSessionData(updatedSessionData);
-            })
-            .catch(error => console.error('Error:', error));
+    const updateSession = async (guid, updates) => {
+        const result = await updateSessionApi(guid, updates);
+        if (result.success) {
+            const updatedSessionData = sessionData.map(s => {
+                if (s.guid === guid) {
+                    return result.session;
+                }
+                return s;
+            });
+            updateSessionData(updatedSessionData);
+        }
     }
 
-    const handleSessionNameChange = (session, e) => {
+    const handleSessionNameChange = async (session, e) => {
         if (e.key === 'Escape') {
             setRenameSessionId(null);
         } else if (e.key === 'Enter') {
-            updateSession(session.guid, {name: e.target.value});
+            await updateSession(session.guid, {name: e.target.value});
             setRenameSessionId(null);
         } else {
             const updatedSessionData = sessionData.map(s => {
@@ -111,35 +86,21 @@ const Sidebar = ({
         setRenameSessionId(null);
     }
 
-    const cloneSession = (session) => {
-        fetch(api + '/session/' + session.guid + '/clone', {
-            method: 'POST',
-            credentials: 'include',
-        })
-            .then(response => response.json())
-            .then(data => {
-                updateSessionData([data, ...sessionData]);
-            })
-            .catch(error => console.error('Error:', error));
+    const cloneSession = async (session) => {
+        const result = await cloneSessionApi(session);
+        if (result.success) {
+            updateSessionData([result.session, ...sessionData]);
+        }
     }
 
-    const deleteSession = (session) => {
+    const deleteSession = async (session) => {
         const confirmDelete = window.confirm("Are you sure you want to delete?");
         if (confirmDelete) {
-            fetch(api + '/session/' + session.guid, {
-                method: 'DELETE',
-                credentials: 'include',
-            })
-                .then(response => {
-                    if (response.ok) {
-                        console.log('Session deleted');
-                        const updatedSessionData = sessionData.filter(s => s.guid !== session.guid);
-                        updateSessionData(updatedSessionData);
-                    } else {
-                        console.error('Session delete failed');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
+            const result = await deleteSessionApi(session.guid);
+            if (result.success) {
+                const updatedSessionData = sessionData.filter(s => s.guid !== session.guid);
+                updateSessionData(updatedSessionData);
+            }
         }
     }
 

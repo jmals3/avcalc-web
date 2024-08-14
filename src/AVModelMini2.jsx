@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useMemo} from 'react';
-import {designRows, colors, api} from "./constants.js";
+import {designRowsMini, avColors, colors, api} from "./constants.js";
 import {hyphenStrs} from "./functions.js";
 import ServiceCostSharingPopup from "./ServiceCostSharingPopUp.jsx";
 import {FaCaretLeft, FaCaretRight, FaTimesCircle, FaTimes, FaPlusCircle} from "react-icons/fa";
@@ -26,12 +26,11 @@ function useDynamicRefs(rows, cols) {
     return refs;
 }
 
-const AVModel = ({planData, updatePlanData}) => {
-// const AVModel = () => {
+const AVModelMini = ({planData, updatePlanData}) => {
     const [isLoading, setIsLoading] = useState(false);
     // const [planData, updatePlanData] = useState(_plandata);
 
-    const rows = designRows.reduce((acc, group) => acc + group.sections.reduce((acc, section) => acc + section.fields.filter(field => field.editable).length, 0), 0);
+    const rows = designRowsMini.reduce((acc, section) => acc + section.fields.filter(field => field.editable).length, 0);
     const cols = useMemo(() => planData.plans.reduce((acc, plan) => acc + plan.tiers.length, 0), [planData]);
     const inputRefs = useDynamicRefs(rows, cols);
 
@@ -70,7 +69,7 @@ const AVModel = ({planData, updatePlanData}) => {
     const handleKeyDown = (e, fieldNum, planNum, tierNum) => {
         if (e.key === 'Enter' || e.key === 'ArrowDown') {
             e.preventDefault();
-            const rows = designRows.flatMap(group => group.sections).flatMap(section => section.fields).filter(field => field.editable).length;
+            const rows = designRowsMini.flatMap(section => section.fields).filter(field => field.editable).length;
             var nextRow = (fieldNum + 1);
             const colIndex = planData.plans.slice(0, planNum).reduce((acc, plan) => acc + plan.tiers.length, 0) + tierNum;
             while (nextRow < rows) {
@@ -106,17 +105,15 @@ const AVModel = ({planData, updatePlanData}) => {
     }
 
     function getFieldWithMapTo(mapTo) {
-        for (let group of designRows) {
-            for (let section of group.sections) {
-                for (let field of section.fields) {
-                    if (Array.isArray(field.mapTo)) {
-                        if (field.mapTo.includes(mapTo)) {
-                            return field;
-                        }
-                    } else {
-                        if (field.mapTo === mapTo) {
-                            return field;
-                        }
+        for (let section of designRowsMini) {
+            for (let field of section.fields) {
+                if (Array.isArray(field.mapTo)) {
+                    if (field.mapTo.includes(mapTo)) {
+                        return field;
+                    }
+                } else {
+                    if (field.mapTo === mapTo) {
+                        return field;
                     }
                 }
             }
@@ -514,7 +511,8 @@ const AVModel = ({planData, updatePlanData}) => {
         });
     }
 
-    function getServiceValueStr(value) {
+    function getServiceValueStr(plan, field) {
+        let value = plan.tiers[0].service_cost_sharing[field] ?? {Copay: 0, Coins: plan.tiers[0].coinsurance, PerDiem: false};
         let copay = value.Copay;
         let coinsurance = value.Coins;
         let perDiem = value.PerDiem;
@@ -590,7 +588,7 @@ const AVModel = ({planData, updatePlanData}) => {
 
     function getDataCellInput(val, field, planNum, tierNum = 0) {
         let formattedVal = getFormattedValue(val, field.format);
-        let fieldNum = designRows.flatMap(group => group.sections.flatMap(section => section.fields)).filter(field => field.editable).findIndex(f => f.name === field.name);
+        let fieldNum = designRowsMini.flatMap(section => section.fields).filter(field => field.editable).findIndex(f => f.name === field.name);
         let colIndex = planData.plans.slice(0, planNum).reduce((acc, plan) => acc + plan.tiers.length, 0) + tierNum;
         let isDedCoins = getCoinsuranceStr(planData.plans[planNum].tiers[tierNum].coinsurance) + ' *' === formattedVal;
         if (!field.editable) {
@@ -655,7 +653,8 @@ const AVModel = ({planData, updatePlanData}) => {
                         <div className="plan-name-container">
                             <div style={{display: 'flex', alignItems: 'center'}}>
                                 {planNum > 0 ?
-                                    <FaCaretLeft className={'icon-size'} title="Move plan left" onClick={() => movePlanLeft(planNum)}/>
+                                    <FaCaretLeft className={'icon-size'} title="Move plan left"
+                                                 onClick={() => movePlanLeft(planNum)}/>
                                     : <div style={{width: '21px'}}></div>}
                                 <div className="color-pick" title={"Change plan color"}>
                                     <input type="color"
@@ -666,10 +665,12 @@ const AVModel = ({planData, updatePlanData}) => {
                             {getDataCellInput(val, field, planNum)}
                             <div style={{display: 'flex', alignItems: 'center'}}>
                                 {/*<input type="color" onChange={(e) => changePlanColor(e, planNum)}/>*/}
-                                <FaTimesCircle className={'icon-size'} title="Remove plan" onClick={() => removePlan(planNum)} />
+                                <FaTimesCircle className={'icon-size'} title="Remove plan"
+                                               onClick={() => removePlan(planNum)}/>
                                 {/*<FaPlus className={'icon-size'} onClick={() => addPlan(planNum)}/>*/}
                                 {planNum < planData.plans.length - 1 ?
-                                    <FaCaretRight className={'icon-size'} title="Move plan right" onClick={() => movePlanRight(planNum)}/>
+                                    <FaCaretRight className={'icon-size'} title="Move plan right"
+                                                  onClick={() => movePlanRight(planNum)}/>
                                     : <div style={{width: '21px'}}></div>}
                             </div>
                         </div>
@@ -698,8 +699,10 @@ const AVModel = ({planData, updatePlanData}) => {
                                 {getDataCellInput(val, field, planNum)}
                                 <div style={{width: '21px', display: 'flex'}}>
                                     {tierNum > 0
-                                        ? <FaTimesCircle className={'remove-tier'} onClick={() => removeTier(planNum, tierNum)}/>
-                                        : <FaPlusCircle className={'remove-tier'} onClick={() => addTier(planNum, tierNum)}/>
+                                        ? <FaTimesCircle className={'remove-tier'}
+                                                         onClick={() => removeTier(planNum, tierNum)}/>
+                                        :
+                                        <FaPlusCircle className={'remove-tier'} onClick={() => addTier(planNum, tierNum)}/>
                                     }
                                 </div>
                             </div>
@@ -775,47 +778,314 @@ const AVModel = ({planData, updatePlanData}) => {
                 className={'av-table'}>
                 <tbody>
 
-                {designRows.map(group => {
-                    return group.sections.map((section, sectionNum) => {
-                        return section.fields.map((field, fieldNum) => {
-                            return sectionNum === 0 && fieldNum === 0 ? (
-                                    <tr key={hyphenStrs('av', group.name, section.name)}>
-                                        <td key={hyphenStrs('av', group.name, 'label')}
-                                            style={{backgroundColor: group.color}}
-                                            className={`group-label ${group.cssClass ?? ''}`}
-                                            rowSpan={getGroupHeight(group)}><span>{group.name}</span></td>
-                                        <td key={hyphenStrs('av', group.name, section.name, 'label')}
+                <tr key={'av-plan'}>
+                    <td key={'av-plan-label'}
+                        style={{backgroundColor: avColors.info.plan}}
+                        className={`section-label group-top-row`}
+                        rowSpan={2}>Plan
+                    </td>
+                    <td key={'av-plan-name-label'}
+                        style={{backgroundColor: avColors.info.plan}}
+                        className={`field-label group-top-row`}>Name
+                    </td>
+                    {planData.plans.map((plan, planNum) => {
+                        return (
+                            <td
+                                className={`plan-data`}
+                                style={{backgroundColor: plan.color ?? colors[planNum % colors.length]}}
+                                key={'av-plan-name-' + planNum}>
+                                <div className="plan-name-container">
+                                    <div style={{display: 'flex', alignItems: 'center'}}>
+                                        {planNum > 0 ?
+                                            <FaCaretLeft className={'icon-size'} title="Move plan left"
+                                                         onClick={() => movePlanLeft(planNum)}/>
+                                            : <div style={{width: '21px'}}></div>}
+                                        <div className="color-pick" title={"Change plan color"}>
+                                            <input type="color"
+                                                   onChange={(e) => changePlanColor(e, planNum)}
+                                                   value={plan.color}/>
+                                        </div>
+                                    </div>
+                                    {plan.name}
+                                    <div style={{display: 'flex', alignItems: 'center'}}>
+                                        <FaTimesCircle className={'icon-size'} title="Remove plan"
+                                                       onClick={() => removePlan(planNum)}/>
+                                        {planNum < planData.plans.length - 1 ?
+                                            <FaCaretRight className={'icon-size'} title="Move plan right"
+                                                          onClick={() => movePlanRight(planNum)}/>
+                                            : <div style={{width: '21px'}}></div>}
+                                    </div>
+                                </div>
+                            </td>
+                        );
+                    })}
+                </tr>
+
+                <tr key={'av-scenario'}>
+                    <td key={'av-plan-scenario-label'}
+                        style={{backgroundColor: avColors.info.plan}}
+                        className={`field-label`}>Scenario
+                    </td>
+                    {planData.plans.map((plan, planNum) => {
+                        return (
+                            <td
+                                className={`plan-data`}
+                                style={{backgroundColor: plan.color ?? colors[planNum % colors.length]}}
+                                key={'av-plan-scenario-' + planNum}>
+                                {/*TODO: Make this editable*/}
+                                {plan.scenario}
+                            </td>
+                        );
+                    })}
+                </tr>
+
+                <tr key={'av-ded'}>
+                    <td key={'av-global-label'}
+                        className={`section-label group-top-row`}
+                        rowSpan={3}>Global
+                    </td>
+                    <td key={'av-global-ded-label'}
+                        className={`field-label group-top-row`}>Deductible (Individual / Family)
+                    </td>
+                    {planData.plans.map((plan, planNum) => {
+                        return (
+                            <td
+                                className={`plan-data`}
+                                key={'av-global-ded-' + planNum}>
+                                {plan.tiers[0].ind_ded} / {plan.tiers[0].fam_ded}
+                            </td>
+                        );
+                    })}
+                </tr>
+
+                <tr key={'av-oopm'}>
+                    <td key={'av-global-oopm-label'}
+                        className={`field-label`}>OOP Max (Individual / Family)
+                    </td>
+                    {planData.plans.map((plan, planNum) => {
+                        return (
+                            <td
+                                className={`plan-data`}
+                                key={'av-global-oopm-' + planNum}>
+                                {plan.tiers[0].ind_oopm} / {plan.tiers[0].fam_oopm}
+                            </td>
+                        );
+                    })}
+                </tr>
+
+                <tr key={'av-coins'}>
+                    <td key={'av-global-coins-label'}
+                        className={`field-label`}>Member Coinsurance %
+                    </td>
+                    {planData.plans.map((plan, planNum) => {
+                        return (
+                            <td
+                                className={`plan-data`}
+                                key={'av-global-coins-' + planNum}>
+                                {1 - plan.tiers[0].coinsurance}
+                            </td>
+                        );
+                    })}
+                </tr>
+
+                <tr key={'av-prev'}>
+                    <td key={'av-ov-label'}
+                        className={`section-label group-top-row`}
+                        rowSpan={3}>Office Visits
+                    </td>
+                    <td key={'av-ov-prev-label'}
+                        className={`field-label group-top-row`}>Preventative / Well-Check
+                    </td>
+                    {planData.plans.map((plan, planNum) => {
+                        return (
+                            <td
+                                className={`plan-data`}
+                                key={'av-ov-prev-' + planNum}>
+                                {getServiceValueStr(plan, 'Prev')}
+                            </td>
+                        );
+                    })}
+                </tr>
+
+                <tr key={'av-pcp'}>
+                    <td key={'av-ov-pcp-label'}
+                        className={`field-label`}>Primary Care Physician
+                    </td>
+                    {planData.plans.map((plan, planNum) => {
+                        return (
+                            <td
+                                className={`plan-data`}
+                                key={'av-ov-pcp-' + planNum}>
+                                {getServiceValueStr(plan, 'PCP')}
+                            </td>
+                        );
+                    })}
+                </tr>
+
+                <tr key={'av-scp'}>
+                    <td key={'av-ov-scp-label'}
+                        className={`field-label`}>Specialist Care Physician
+                    </td>
+                    {planData.plans.map((plan, planNum) => {
+                        return (
+                            <td
+                                className={`plan-data`}
+                                key={'av-ov-scp-' + planNum}>
+                                {getServiceValueStr(plan, 'SCP')}
+                            </td>
+                        );
+                    })}
+                </tr>
+
+                <tr key={'av-er'}>
+                    <td key={'av-fac-label'}
+                        className={`section-label group-top-row`}
+                        rowSpan={3}>Facility
+                    </td>
+                    <td key={'av-fac-er-label'}
+                        className={`field-label group-top-row`}>Emergency Room
+                    </td>
+                    {planData.plans.map((plan, planNum) => {
+                        return (
+                            <td
+                                className={`plan-data`}
+                                key={'av-fac-er-' + planNum}>
+                                {getServiceValueStr(plan, 'ER')}
+                            </td>
+                        );
+                    })}
+                </tr>
+
+                <tr key={'av-ip'}>
+                    <td key={'av-fac-ip-label'}
+                        className={`field-label`}>Inpatient Facility
+                    </td>
+                    {planData.plans.map((plan, planNum) => {
+                        return (
+                            <td
+                                className={`plan-data`}
+                                key={'av-fac-ip-' + planNum}>
+                                {getServiceValueStr(plan, 'IPFac')}
+                            </td>
+                        );
+                    })}
+                </tr>
+
+                <tr key={'av-OP'}>
+                    <td key={'av-fac-op-label'}
+                        className={`field-label group-top-row`}>Outpatient Facility
+                    </td>
+                    {planData.plans.map((plan, planNum) => {
+                        return (
+                            <td
+                                className={`plan-data`}
+                                key={'av-fac-op-' + planNum}>
+                                {getServiceValueStr(plan, 'OPFac')}
+                            </td>
+                        );
+                    })}
+                </tr>
+
+                <tr key={'av-generic'}>
+                    <td key={'av-rx-label'}
+                        className={`section-label group-top-row`}
+                        rowSpan={4}>Rx
+                    </td>
+                    <td key={'av-rx-generic-label'}
+                        className={`field-label group-top-row`}>Generic Drugs
+                    </td>
+                    {planData.plans.map((plan, planNum) => {
+                        return (
+                            <td
+                                className={`plan-data`}
+                                key={'av-rx-generics-' + planNum}>
+                                {getServiceValueStr(plan, 'RxGeneric')}
+                            </td>
+                        );
+                    })}
+                </tr>
+
+                <tr key={'av-prefbrand'}>
+                    <td key={'av-rx-prefbrand-label'}
+                        className={`field-label`}>Preferred Brand Drugs
+                    </td>
+                    {planData.plans.map((plan, planNum) => {
+                        return (
+                            <td
+                                className={`plan-data`}
+                                key={'av-rx-prefbrand-' + planNum}>
+                                {getServiceValueStr(plan, 'RxPrefBrand')}
+                            </td>
+                        );
+                    })}
+                </tr>
+
+                <tr key={'av-nonprefbrand'}>
+                    <td key={'av-rx-nonprefbrand-label'}
+                        className={`field-label`}>Non-Preferred Brand Drugs
+                    </td>
+                    {planData.plans.map((plan, planNum) => {
+                        return (
+                            <td
+                                className={`plan-data`}
+                                key={'av-rx-nonprefbrand-' + planNum}>
+                                {getServiceValueStr(plan, 'RxNonPrefBrand')}
+                            </td>
+                        );
+                    })}
+                </tr>
+
+                <tr key={'av-specialty'}>
+                    <td key={'av-rx-specialty-label'}
+                        className={`field-label`}>Specialty Drugs
+                    </td>
+                    {planData.plans.map((plan, planNum) => {
+                        return (
+                            <td
+                                className={`plan-data`}
+                                key={'av-rx-specialty-' + planNum}>
+                                {getServiceValueStr(plan, 'RxSpecialty')}
+                            </td>
+                        );
+                    })}
+                </tr>
+
+                {designRowsMini.map((section, sectionNum) => {
+                    return section.fields.map((field, fieldNum) => {
+                        return sectionNum === 0 && fieldNum === 0 ? (
+                                <tr key={hyphenStrs('av', section.name)}>
+                                    <td key={hyphenStrs('av', section.name, 'label')}
+                                        style={{backgroundColor: section.color}}
+                                        className={`section-label group-top-row ${section.cssClass ?? ''}`}
+                                        rowSpan={getSectionHeight(section)}>{section.name}</td>
+                                    <td key={hyphenStrs('av', section.name, field.name, 'label')}
+                                        style={{backgroundColor: field.color}}
+                                        className={`field-label group-top-row ${field.cssClass ?? ''}`}>{field.name}</td>
+                                    {getPlanData(group, field)}
+                                </tr>
+                            )
+                            : fieldNum === 0 ? (
+                                    <tr key={hyphenStrs('av', section.name)}>
+                                        <td key={hyphenStrs('av', section.name, 'label')}
                                             style={{backgroundColor: section.color}}
-                                            className={`section-label group-top-row ${section.cssClass ?? ''}`}
+                                            className={`section-label ${section.cssClass ?? ''}`}
                                             rowSpan={getSectionHeight(section)}>{section.name}</td>
-                                        <td key={hyphenStrs('av', group.name, section.name, field.name, 'label')}
+                                        <td key={hyphenStrs('av', section.name, field.name, 'label')}
                                             style={{backgroundColor: field.color}}
-                                            className={`field-label group-top-row ${field.cssClass ?? ''}`}>{field.name}</td>
+                                            className={`field-label section-top-row ${field.cssClass ?? ''}`}>{field.name}</td>
                                         {getPlanData(group, field)}
                                     </tr>
                                 )
-                                : fieldNum === 0 ? (
-                                        <tr key={hyphenStrs('av', group.name, section.name)}>
-                                            <td key={hyphenStrs('av', group.name, section.name, 'label')}
-                                                style={{backgroundColor: section.color}}
-                                                className={`section-label ${section.cssClass ?? ''}`}
-                                                rowSpan={getSectionHeight(section)}>{section.name}</td>
-                                            <td key={hyphenStrs('av', group.name, section.name, field.name, 'label')}
+                                : (
+                                    field.nullable && fieldNullForAllPlans(field) ? null
+                                        :
+                                        <tr key={'av-' + section.name + '-' + fieldNum}>
+                                            <td key={'av-' + field.name}
                                                 style={{backgroundColor: field.color}}
-                                                className={`field-label section-top-row ${field.cssClass ?? ''}`}>{field.name}</td>
+                                                className={`field-label ${field.cssClass ?? ''}`}>{field.name}</td>
                                             {getPlanData(group, field)}
                                         </tr>
-                                    )
-                                    : (
-                                        field.nullable && fieldNullForAllPlans(field) ? null
-                                            : <tr key={'av-' + section.name + '-' + fieldNum}>
-                                                <td key={'av-' + field.name}
-                                                    style={{backgroundColor: field.color}}
-                                                    className={`field-label ${field.cssClass ?? ''}`}>{field.name}</td>
-                                                {getPlanData(group, field)}
-                                            </tr>
-                                    )
-                        });
+                                )
                     });
                 })}
 
