@@ -1,17 +1,87 @@
+/* src/index.css */
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  --primary-background-color: #f1f1f1;
+  --secondary-border-color: #ccc;
+  --primary-header-background-color: #555;
+  --primary-header-text-color: white;
+  --primary-body-background-color: #eeeeee;
+  --primary-body-text-color: #111111;
+  --primary-footer-background-color: #f1f1f1;
+  --input-background-color: #eeeeee;
+  --input-text-color: #111111;
+  --input-border-color: #ccc;
+  --button-background-color: #555;
+  --button-text-color: white;
+  --button-border-color: #555;
+  --overlay-background-color: rgba(0, 0, 0, 0.5);
+  --add-plans-btn-background-color: #555;
+  --add-plans-btn-hover-background-color: #5f5f5f;
+  --add-plans-btn-shadow-color: rgba(0, 0, 0, 0.2);
+  --disabled-button-background-color: #d3d3d3;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-background-color: #1A1A1A; /* main editor */
+    --secondary-background-color: #1E1F22; /* header w files */
+    --primary-border-color:  #232426; /* darker border */
+    --secondary-border-color: #2B2D32; /* light border */
+    --content-background-color: #2F3035; /* input box in chat but also chat pane and side bar*/
+    --accent-color: #222326; /* lighter overlay on top of side bar */
+    --primary-header-text-color: #ffffff;
+    --secondary-body-text-color: #D0D0D0;
+    --disabled-text-color: #C7C7C7;
+
+    --primary-header-background-color: #333;
+    --primary-header-text-color: #ffffff;
+    --primary-body-background-color: #121212;
+    --primary-body-text-color: #e0e0e0;
+    --primary-footer-background-color: #242424;
+    --input-text-color: #e0e0e0;
+    --input-border-color: #444;
+    --button-background-color: #444;
+    --button-text-color: #ffffff;
+    --button-border-color: #444;
+    --overlay-background-color: rgba(0, 0, 0, 0.7);
+    --add-plans-btn-background-color: #444;
+    --add-plans-btn-hover-background-color: #555;
+    --add-plans-btn-shadow-color: rgba(0, 0, 0, 0.5);
+    --disabled-button-background-color: #555;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --primary-background-color: #eeeeee;
+    --secondary-border-color: #ccc;
+    --primary-header-background-color: #f1f1f1;
+    --primary-header-text-color: #111111;
+    --primary-body-background-color: #eeeeee;
+    --primary-body-text-color: #111111;
+    --primary-footer-background-color: #f1f1f1;
+    --input-background-color: #eeeeee;
+    --input-text-color: #111111;
+    --input-border-color: #ccc;
+    --button-background-color: #f1f1f1;
+    --button-text-color: #111111;
+    --button-border-color: #ccc;
+    --overlay-background-color: rgba(0, 0, 0, 0.5);
+    --add-plans-btn-background-color: #f1f1f1;
+    --add-plans-btn-hover-background-color: #e0e0e0;
+    --add-plans-btn-shadow-color: rgba(0, 0, 0, 0.2);
+    --disabled-button-background-color: #d3d3d3;
+  }
 }
 
 a {
@@ -29,6 +99,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--primary-background-color);
 }
 
 h1 {
@@ -58,7 +129,7 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
+    background-color: #eeeeee;
   }
   a:hover {
     color: #747bff;

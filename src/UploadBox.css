@@ -1,9 +1,9 @@
-/* UploadBox.css */
+/* src/UploadBox.css */
 
 .UploadBox {
     width: 300px;
     height: 200px;
-    border: 2px solid #000;
+    border: 2px solid var(--primary-body-text-color);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,21 +16,21 @@
 
 .UploadBox label {
     padding: 10px;
-    background-color: #4CAF50;
-    color: white;
+    background-color: var(--button-background-color);
+    color: var(--button-text-color);
     cursor: pointer;
 }
 
 .UploadBox button {
     margin-top: 10px;
     padding: 10px;
-    background-color: #008CBA;
-    color: white;
+    background-color: var(--button-background-color);
+    color: var(--button-text-color);
     cursor: pointer;
     border: none;
 }
 
 .UploadBox button:disabled {
-    background-color: #cccccc;
+    background-color: var(--disabled-button-background-color);
     cursor: not-allowed;
 }

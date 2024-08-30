@@ -1,3 +1,4 @@
+/* src/Landing.css */
 body, html {
     margin: 0;
     padding: 0;
@@ -9,8 +10,8 @@ body, html {
 }
 
 .top-bar {
-    background-color: #333;
-    color: white;
+    background-color: var(--primary-header-background-color);
+    color: var(--primary-header-text-color);
     display: flex;
     justify-content: space-between;
     padding: 10px 20px;
@@ -44,19 +45,19 @@ body, html {
 }
 
 .landing-page .auth-buttons .signup-button {
-    background-color: #555;
-    color: white;
+    background-color: var(--button-background-color);
+    color: var(--button-text-color);
 }
 
 .landing-page .auth-buttons button:hover {
-    background-color: #777;
+    background-color: var(--add-plans-btn-hover-background-color);
 }
 
 .landing-page .hero-section {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #656565;
+    background-color: var(--primary-body-background-color);
     padding: 50px 20px;
 }
 
@@ -132,12 +133,12 @@ body, html {
 
 .landing-page .get-started-section {
     text-align: center;
-    background-color: #656565;
+    background-color: var(--primary-body-background-color);
 }
 
 .landing-page .get-started-section button {
-    background-color: #4CAF50;
-    color: white;
+    background-color: var(--button-background-color);
+    color: var(--button-text-color);
     border: none;
     padding: 15px 30px;
     cursor: pointer;
@@ -146,8 +147,8 @@ body, html {
 }
 
 .landing-page .footer {
-    background-color: #333;
-    color: white;
+    background-color: var(--primary-header-background-color);
+    color: var(--primary-header-text-color);
     padding: 20px;
     display: flex;
     justify-content: space-between;
@@ -176,6 +177,6 @@ body, html {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.9);
+    background: var(--overlay-background-color);
     z-index: 500;
 }

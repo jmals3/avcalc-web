@@ -1,15 +1,16 @@
+/* src/AVModel.css */
 .av-table {
     border-spacing: 0;
     border-collapse: separate;
-    border-bottom: 2px solid #111;
-    /*border-left: 2px solid #111;*/
+    border-bottom: 2px solid var(--primary-body-text-color);
+    /*border-left: 2px solid var(--primary-body-text-color);*/
 }
 
 .av-table td {
     position: relative;
-    background-color: #333;
-    border-top: 1px solid #222;
-    border-right: 1px solid #222;
+    background-color: var(--primary-body-background-color);
+    border-top: 1px solid var(--secondary-border-color);
+    border-right: 1px solid var(--secondary-border-color);
     /*border-radius: 4px;*/
     height: 24px;
     padding: 8px;
@@ -18,17 +19,13 @@
 
 .av-table td.editable {
     cursor: pointer;
-    background-color: #282828;
+    background-color: var(--input-background-color);
     transition: box-shadow 0.25s;
 }
 
 .av-table td.editable:hover {
     z-index: 1;
-    box-shadow: 0 0 0 1px #646cff;
-}
-.av-table td.editable:focus,
-.av-table td.editable:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
+    box-shadow: 0 0 0 1px var(--button-background-color);
 }
 
 .av-table td.editable:focus,
@@ -37,7 +34,7 @@
 }
 
 .av-table td.inactive {
-    background-color: #333;
+    background-color: var(--primary-body-background-color);
 }
 
 .av-table td.plan-data {
@@ -50,8 +47,8 @@
     width: 14px;
     height: 14px;
     overflow: hidden;
-    border-radius:100%;
-    border: solid white 1px;
+    border-radius: 100%;
+    border: solid var(--primary-header-text-color) 1px;
 }
 
 .av-table input[type='color'] {
@@ -60,7 +57,7 @@
     transform: scale(4);
 }
 
-.av-table td input, .av-table td select{
+.av-table td input, .av-table td select {
     width: 100%;
     background-color: inherit;
     border: none;
@@ -78,6 +75,7 @@
 .av-table .service-input:focus {
     outline-offset: -2px;
 }
+
 .av-table .service-input:focus-visible {
     outline-color: -webkit-focus-ring-color;
     outline-style: auto;
@@ -85,24 +83,19 @@
 }
 
 .av-table .ded-coins {
-    color: #CCC;
+    color: var(--primary-body-text-color);
 }
 
-/* unfortunately writing-mode doesn't work on safari
-   so had to improvise with some clunkier css
-   hence the commented-out code below */
 .av-table .group-label {
-    /*writing-mode: vertical-lr;*/
     font-weight: bold;
     text-align: center;
-    /*width: 24px;*/
     max-width: 24px;
     overflow: hidden;
-    border-top: 2px solid #111;
-    border-right: 1px solid #111;
+    border-top: 2px solid var(--primary-body-text-color);
+    border-right: 1px solid var(--primary-body-text-color);
 }
+
 .av-table .group-label > span {
-    /*transform: rotate(180deg);*/
     display: inline-block;
     white-space: nowrap;
     overflow: visible;
@@ -111,34 +104,36 @@
     width: 40px;
     height: 40px;
 }
-.av-table .group-top-row {
-    border-top: 2px solid #111;
-}
 
+.av-table .group-top-row {
+    border-top: 2px solid var(--primary-body-text-color);
+}
 
 .av-table .section-label {
     font-weight: bold;
     width: 100px;
     text-align: center;
-    border-top: 1px solid #111;
-    border-right: 1px solid #111;
+    border-top: 1px solid var(--primary-body-text-color);
+    border-right: 1px solid var(--primary-body-text-color);
 }
+
 .av-table .section-label.group-top-row {
-    border-top: 2px solid #111;
+    border-top: 2px solid var(--primary-body-text-color);
 }
+
 .av-table td.section-top-row {
-    border-top: 1px solid #111;
+    border-top: 1px solid var(--primary-body-text-color);
 }
 
 .av-table .field-label {
     font-size: small;
-    background-color: #333;
-    border-right: 1px solid #111;
+    background-color: var(--primary-body-background-color);
+    border-right: 1px solid var(--primary-body-text-color);
     min-width: 200px;
 }
 
 .av-table .last-tier {
-    border-right: 1px solid #111;
+    border-right: 1px solid var(--primary-body-text-color);
 }
 
 .av-table .plan-name-container {
@@ -168,10 +163,10 @@
 }
 
 .calcbtn {
-    background-color: #555;
+    background-color: var(--button-background-color);
     text-align: center;
-    color: white;
-    border: 1px solid white;
+    color: var(--button-text-color);
+    border: 1px solid var(--button-text-color);
     width: 90%;
     height: 40%;
     cursor: pointer;
@@ -185,45 +180,42 @@
     top: 0;
     z-index: 4;
 }
+
 .av-table .sticky-2 {
     position: sticky;
     top: 42px;
     z-index: 4;
 }
+
 .av-table .sticky-3 {
     position: sticky;
     top: 83px;
     z-index: 4;
 }
+
 .av-table .sticky-4 {
     position: sticky;
     top: 124px;
     z-index: 4;
 }
+
 .av-table .sticky-5 {
     position: sticky;
     top: 166px;
     z-index: 4;
 }
+
 .av-table .sticky-6 {
     position: sticky;
     top: 207px;
     z-index: 4;
 }
 
-/*.av-table .group-label,*/
-/*.av-table .section-label,*/
-/*.av-table .field-label {*/
-/*    position: sticky;*/
-/*    left: 0;*/
-/*    z-index: 5;*/
-/*}*/
-
 .av-table .group-label {
     position: sticky;
     left: 0;
     z-index: 5;
-    border-left: 2px solid #111;
+    border-left: 2px solid var(--primary-body-text-color);
 }
 
 .av-table .section-label {

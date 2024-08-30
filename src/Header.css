@@ -1,3 +1,4 @@
+/* src/Header.css */
 .header {
     position: fixed;
     top: 0;
@@ -6,9 +7,9 @@
     justify-content: space-between;
     align-items: center;
     padding: 0 20px;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1);
+    box-shadow: 0 2px 4px 0 var(--overlay-background-color);
     height: 60px;
-    background-color: #242424;
+    background-color: var(--primary-header-background-color);
     width: calc(100vw - 290px);
 }
 .header.expanded {
@@ -18,7 +19,7 @@
 .header-title {
     font-size: 20px;
     font-weight: bold;
-    /* color: #333; */
+    /* color: var(--primary-body-text-color); */
 }
 
 .header-actions {
@@ -34,14 +35,14 @@
 .header-icon-button {
     background-color: unset;
     border: none;
-    color: white;
+    color: var(--primary-header-text-color);
     padding: 4px;
     margin-left: 20px;
     cursor: pointer;
 }
 
 .header-icon-button:hover {
-    background-color: #333;
+    background-color: var(--primary-body-text-color);
 }
 
 .header .menu-overlay {

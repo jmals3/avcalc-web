@@ -1,19 +1,20 @@
+/* src/ChatSidePane.css */
 .chat-side-pane {
     position: fixed;
     right: 0;
     top: 0;
     width: 300px;
     height: 100%;
-    background-color: #f1f1f1;
-    border-left: 1px solid #ccc;
+    background-color: var(--primary-background-color);
+    border-left: 1px solid var(--secondary-border-color);
     display: flex;
     flex-direction: column;
 }
 
 .chat-header {
     padding: 10px;
-    background-color: #555;
-    color: white;
+    background-color: var(--primary-header-background-color);
+    color: var(--primary-header-text-color);
     text-align: center;
 }
 
@@ -21,20 +22,29 @@
     flex: 1;
     padding: 10px;
     overflow-y: auto;
+    background-color: var(--primary-body-background-color);
+    color: var(--primary-body-text-color);
 }
 
 .chat-footer {
     display: flex;
     padding: 10px;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid var(--secondary-border-color);
+    background-color: var(--primary-footer-background-color);
 }
 
 .chat-footer input {
     flex: 1;
     padding: 5px;
     margin-right: 10px;
+    background-color: var(--input-background-color);
+    color: var(--input-text-color);
+    border: 1px solid var(--input-border-color);
 }
 
 .chat-footer button {
     padding: 5px 10px;
+    background-color: var(--button-background-color);
+    color: var(--button-text-color);
+    border: 1px solid var(--button-border-color);
 }
